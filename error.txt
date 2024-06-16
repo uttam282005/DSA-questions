@@ -1,0 +1,4 @@
+add_and_divide.cpp: In function ‘void solve()’:
+add_and_divide.cpp:38:35: error: ‘n’ was not declared in this scope
+   38 |         for (int i = 0; i <= sqrt(n) + 1; i++) {
+      |                                   ^
