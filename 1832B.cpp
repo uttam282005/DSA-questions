@@ -9,7 +9,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector< int>
+#define vi vector<ll int>
 #define vs vector<string>
 #define gcd(a,b) __gcd(a,b)
 #define pii pair<int, int>
@@ -22,29 +22,24 @@ using namespace std;
 #define rep(i, a, b) for (int i = a; i < b; i++)
 
 void solve() {
-   int n;
-   cin >> n;
-   vi v(n);
-   int cnt = 0;
-   ll sum = 0;
-   int cntZero = 0;
-   int minAbs = INT_MAX;
-   rep (i, 0, n){
-    cin >> v[i];
-    sum += abs(v[i]);
-    minAbs = min(minAbs, abs(v[i]));
-    if (v[i] < 0) cnt++;
-    if (v[i] == 0) cntZero++;
-   }
-   if (cnt & 1) {
-    if ((cnt + cntZero) & 1){
-        cout << sum - 2*minAbs << endl;
-    } else {
-        cout << sum << endl;
+    int n, k;
+    cin >> n >> k;
+    ll sum = 0;
+    vi v(n);
+    rep (i, 0, n) {
+        cin >> v[i];
+        sum += v[i];
     }
-   } else {
+    sortv(v);
+    while (k--) {
+        if (v[0] + v[1] < v[n-1]) {
+            sum -= (v[0] + v[1]);
+            v.erase(v.begin() + 1);
+            v.erase(v.begin());
+        }
+        else {sum -= v[n-1]; v.erase(v.begin() + n-1);}
+    }
     cout << sum << endl;
-   }
 }
 
 int main() {

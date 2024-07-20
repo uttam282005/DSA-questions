@@ -9,7 +9,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector< int>
+#define vi vector<ll int>
 #define vs vector<string>
 #define gcd(a,b) __gcd(a,b)
 #define pii pair<int, int>
@@ -21,30 +21,31 @@ using namespace std;
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
 
+ll int good(ll w, vi v, ll n, ll c) {
+    ll sums = 0;
+    rep (i, 0, n) {
+        sums += (v[i] + 2*w) * (v[i] + 2*w);
+        if (sums > c) break;
+        } 
+    return sums;
+}
+
 void solve() {
-   int n;
-   cin >> n;
-   vi v(n);
-   int cnt = 0;
-   ll sum = 0;
-   int cntZero = 0;
-   int minAbs = INT_MAX;
-   rep (i, 0, n){
-    cin >> v[i];
-    sum += abs(v[i]);
-    minAbs = min(minAbs, abs(v[i]));
-    if (v[i] < 0) cnt++;
-    if (v[i] == 0) cntZero++;
-   }
-   if (cnt & 1) {
-    if ((cnt + cntZero) & 1){
-        cout << sum - 2*minAbs << endl;
-    } else {
-        cout << sum << endl;
+    ll n, c;
+    cin >> n >> c;
+    vi v(n);
+    rep (i, 0, n) cin >> v[i];
+    ll l = 1;
+    ll r = 1e9 + 10;
+    while (l <= r) {
+        ll mid = l + (r - l) / 2;
+        if (good(mid, v, n, c) == c) {
+            cout << mid << endl;
+            return;
+        }
+        else if (good(mid, v, n, c) < c) l = mid + 1;
+        else r = mid - 1;
     }
-   } else {
-    cout << sum << endl;
-   }
 }
 
 int main() {

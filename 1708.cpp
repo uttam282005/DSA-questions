@@ -9,7 +9,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector< int>
+#define vi vector<ll int>
 #define vs vector<string>
 #define gcd(a,b) __gcd(a,b)
 #define pii pair<int, int>
@@ -19,32 +19,24 @@ using namespace std;
 #define sortv(vec) sort(vec.begin(), vec.end())
 #define itr(container) for(auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
-#define rep(i, a, b) for (int i = a; i < b; i++)
+#define rep(i, a, b) for (int i = a; i <= b; i++)
 
 void solve() {
-   int n;
-   cin >> n;
-   vi v(n);
-   int cnt = 0;
-   ll sum = 0;
-   int cntZero = 0;
-   int minAbs = INT_MAX;
-   rep (i, 0, n){
-    cin >> v[i];
-    sum += abs(v[i]);
-    minAbs = min(minAbs, abs(v[i]));
-    if (v[i] < 0) cnt++;
-    if (v[i] == 0) cntZero++;
-   }
-   if (cnt & 1) {
-    if ((cnt + cntZero) & 1){
-        cout << sum - 2*minAbs << endl;
-    } else {
-        cout << sum << endl;
+   int n, l, r;
+   cin >> n >> l >> r;
+   vi v;
+   rep (i, 1, n) {
+    if ((r / i) - (l / i) > 0) v.pb((l/i)*i + i);
+    else if (r % i == 0) v.pb(r);
+    else if (l % i == 0) v.pb(l);
+    else {
+        cout << "NO" << endl;
+        return;
     }
-   } else {
-    cout << sum << endl;
-   }
+   } 
+   cout << "YES" << endl;
+   itr (v) cout << it << " ";
+   cout << endl;
 }
 
 int main() {

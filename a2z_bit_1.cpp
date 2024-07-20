@@ -9,7 +9,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector< int>
+#define vi vector<ll int>
 #define vs vector<string>
 #define gcd(a,b) __gcd(a,b)
 #define pii pair<int, int>
@@ -21,30 +21,35 @@ using namespace std;
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
 
-void solve() {
-   int n;
-   cin >> n;
-   vi v(n);
-   int cnt = 0;
-   ll sum = 0;
-   int cntZero = 0;
-   int minAbs = INT_MAX;
-   rep (i, 0, n){
-    cin >> v[i];
-    sum += abs(v[i]);
-    minAbs = min(minAbs, abs(v[i]));
-    if (v[i] < 0) cnt++;
-    if (v[i] == 0) cntZero++;
-   }
-   if (cnt & 1) {
-    if ((cnt + cntZero) & 1){
-        cout << sum - 2*minAbs << endl;
-    } else {
-        cout << sum << endl;
+void printBinary(int num) {
+    for (int i = 7; i >= 0; i--) {
+        cout << ((num >> i) & 1);
     }
-   } else {
-    cout << sum << endl;
-   }
+    cout << endl;
+}    
+
+int findXOR(int l, int r) {
+        int a, b;
+        if (l-1 % 4 == 0) a = l-1;
+        else if (l-1 % 4 == 1) a = 1;
+        else if (l-1 % 4 == 2) a = l;
+        else a = 0;
+        
+        if (r % 4 == 0) b = r;
+        else if (r % 4 == 1) b = 1;
+        else if (r % 4 == 2) b = r + 1;
+        else b = 0;
+        
+        int ans = b ^ a;
+        debug(a);
+        debug(b);
+        return ans;
+    }
+void solve() {
+    int ans = 0;
+        // cout << i << " " ; printBinary(i);
+        cout << findXOR(10, 10);
+  
 }
 
 int main() {
