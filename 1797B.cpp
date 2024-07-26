@@ -22,30 +22,34 @@ using namespace std;
 #define rep(i, a, b) for (int i = a; i < b; i++)
 
 void solve() {
-    int n;
-  cin >> n;
-    vi v(n);
-    rep (i, 0, n) cin >> v[i];
-    vi pre(n+1);
-    pre[1] = v[0];
-    pre[0] = 0;
-    rep (i, 2, n+1) {
-        pre[i] = pre[i-1] + v[i];
+  int n, k;
+  cin >> n >> k;
+  vector <vector<int>> v;
+  rep (i, 0, n) {
+    vi t(n);
+    rep (j, 0, n) {
+      cin >> t[j]; 
     }
-    int maxDiff = -1;
-    rep (i, 1, n/2) {
-        if (n % i != 0) continue; 
-            for (int m = 0; m < n; m += i) {
-       int d =  pre[m+i] - pre[m];
-      debug(d);
-            for (int l = m + i; l < n; l += i) {
-        int s = pre[l + i] - pre[l];
-        debug(s);
-        maxDiff = max(maxDiff, abs(d - s));
-            } 
-        }
+    v.pb(t);
+  }
+  int ops = 0;
+  if (n == 1) {
+    cout << "YES\n"; return;
+  }
+
+  rep (i, 0, n/2) {
+   rep (j, 0, n) {
+      if (v[i][j] != v[n-i-1][n-j-1]) ops++;
+    } 
+  }
+  if (n % 2 != 0) {
+    rep (i, 0, n/2) {
+     if (v[n/2][i] != v[n/2][n-i-1]) ops++;
     }
-  cout << maxDiff << endl;
+  }
+  if (k - ops >= 0 && (k - ops) % 2 == 0) cout << "YES\n";
+  else if (n % 2 != 0 && k - ops > 0) cout << "YES\n";
+  else cout << "NO\n";
 }
 
 int main() {

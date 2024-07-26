@@ -11,29 +11,46 @@ using namespace std;
 #define um unordered_map
 #define vi vector<ll int>
 #define vs vector<string>
-#define gcd(a,b) __gcd(a,b)
+#define gcd(a, b) __gcd(a, b)
 #define pii pair<int, int>
 #define all(x) (x.begin(), x.end())
 #define umii unordered_map<int, int>
 #define sorta(arr) sort(begin(arr), end(arr))
 #define sortv(vec) sort(vec.begin(), vec.end())
-#define itr(container) for(auto &it : container)
+#define itr(container) for (auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
 
 void solve() {
-    
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  int cnt = 0;
+  int ops = 0;
+  int i = n - 1;
+  while (i >= 0) {
+    if (v[i] == v[n - 1]) {
+      cnt++;
+      --i;
+    } else {
+      ops++;
+      i -= cnt;
+      cnt *= 2;
+    }
+  }
+  cout << ops << endl;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    while (t--) {
-        solve();
-    }
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  int t;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
 
-    return 0;
+  return 0;
 }
