@@ -9,16 +9,16 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector <ll int>
-#define vs vector <string>
-#define gcd(a,b) __gcd(a,b)
-#define pii pair <int, int>
+#define vi vector<ll int>
+#define vs vector<string>
+#define gcd(a, b) __gcd(a, b)
+#define pii pair<int, int>
 #define find(v, a) find(v.begin(), v.end(), a)
 #define all(x) (x.begin(), x.end())
-#define umii unordered_map <int, int>
+#define umii unordered_map<int, int>
 #define sorta(arr) sort(begin(arr), end(arr))
 #define sortv(vec) sort(vec.begin(), vec.end())
-#define itr(container) for(auto &it : container)
+#define itr(container) for (auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
 #define acc(v) accumulate(v.begin(), v.end(), 0)
@@ -28,31 +28,29 @@ using namespace std;
 #define mine(v) *min_element(v.begin(), v.end())
 #define repe(i, a, b) for (int i = a; i <= b; i++)
 
-auto print_con = [](auto v){itr(v) cout << it << " ";};
-auto print_arr = [](auto arr[], int n){rep (i, 0, n) cout << arr[i] << " ";};
+auto print_con = [](auto v) { itr(v) cout << it << " "; };
+auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
 // don't forget long long
 
-void solve () {
-	int n;
-	cin >> n;
-	vector <int> v(n);
-	rep (i, 0, n) cin >> v[i];
-	sort(v.begin(), v.end(), [&] (int i, int j) {
-		return i > j;
-	});
-	rep (i, 0, n) cout << v[i] << " ";
-	cout << endl;
+void solve() {
+  int n;
+  cin >> n;
+  vector<int> v(n);
+  rep(i, 0, n) cin >> v[i];
+  sort(v.begin(), v.end(), [&](int i, int j) { return i > j; });
+  rep(i, 0, n) cout << v[i] << " ";
+  cout << endl;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    while (t--) {
-        solve();
-    }
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  int t;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
 
-    return 0;
+  return 0;
 }

@@ -30,15 +30,56 @@ using namespace std;
 
 auto print_con = [](auto v) { itr(v) cout << it << " "; };
 auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
+
 // don't forget long long
 
 void solve() {
-  ll x, y, k;
-  cin >> x >> y >> k;
-  if ((k * y + k - 1) % (x - 1) == 0)
-    cout << (k * y + k - 1) / (x - 1) + k << endl;
-  else
-    cout << (k * y + k - 1) / (x - 1) + k + 1 << endl;
+  ll a, b;
+  cin >> a >> b;
+  ll cnt = 0;
+  if (b >= a) {
+    while (a <= b) {
+      if (a == b) {
+        cout << cnt << endl;
+        return;
+      }
+      if ((a << 3) <= b) {
+        cnt++;
+        a = a << 3;
+      } else if ((a << 2) <= b) {
+        cnt++;
+        a = a << 2;
+      } else {
+        a = a << 1;
+        cnt++;
+      }
+    }
+    cout << -1 << endl;
+    return;
+  }
+  if (b < a) {
+    while (a >= b) {
+      if (a == b) {
+        cout << cnt << endl;
+        return;
+      }
+      if ((a >> 3) >= b && a % 8 == 0) {
+        cnt++;
+        a = a >> 3;
+      } else if ((a >> 2) >= b && a % 4 == 0) {
+        cnt++;
+        a = a >> 2;
+      } else if (a % 2 == 0) {
+        cnt++;
+        a = a >> 1;
+      } else {
+        cout << -1 << endl;
+        return;
+      }
+    }
+    cout << -1 << endl;
+    return;
+  }
 }
 
 int main() {

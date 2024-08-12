@@ -33,12 +33,23 @@ auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
 // don't forget long long
 
 void solve() {
-  ll x, y, k;
-  cin >> x >> y >> k;
-  if ((k * y + k - 1) % (x - 1) == 0)
-    cout << (k * y + k - 1) / (x - 1) + k << endl;
-  else
-    cout << (k * y + k - 1) / (x - 1) + k + 1 << endl;
+  int n, q;
+  cin >> n >> q;
+  string a, b;
+  cin >> a >> b;
+  um<char, int> hshb;
+  rep(i, 0, q) {
+    int ops = 0;
+    int l, r;
+    cin >> l >> r;
+    --l;
+    rep(i, l, r) { hshb[b[i]]++; }
+    rep(i, l, r) {
+      if (hshb[a[i]] != hshb[b[i]])
+        ops++;
+    }
+    cout << ops << endl;
+  }
 }
 
 int main() {

@@ -28,44 +28,41 @@ using namespace std;
 #define mine(v) *min_element(v.begin(), v.end())
 #define repe(i, a, b) for (int i = a; i <= b; i++)
 
-auto print_con = [](auto v) {
-    itr(v) cout << it << " ";
-};
-auto print_arr = [](auto arr[], int n) {
-    rep(i, 0, n) cout << arr[i] << " ";
-};
+auto print_con = [](auto v) { itr(v) cout << it << " "; };
+auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
 // don't forget long long
 
 void solve() {
-    int n, m;
-    cin >> n >> m;
-    vector<vector<int>> v(n, vector<int>(m));
-    int cnt = 0;
-    int sum = 0;
-    int min_value = INT_MAX;
-    rep(i, 0, n) {
-        rep(j, 0, m) {
-            cin >> v[i][j];
-            if (v[i][j] <= 0) cnt++;
-            sum += abs(v[i][j]);
-            min_value = min(min_value, abs(v[i][j]));
-        }
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> v(n, vector<int>(m));
+  int cnt = 0;
+  int sum = 0;
+  int min_value = INT_MAX;
+  rep(i, 0, n) {
+    rep(j, 0, m) {
+      cin >> v[i][j];
+      if (v[i][j] <= 0)
+        cnt++;
+      sum += abs(v[i][j]);
+      min_value = min(min_value, abs(v[i][j]));
     }
-    if (cnt % 2 == 0) {
-        cout << sum << endl;
-        return;
-    }
-    cout << sum - 2 * min_value << endl;
+  }
+  if (cnt % 2 == 0) {
+    cout << sum << endl;
+    return;
+  }
+  cout << sum - 2 * min_value << endl;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    int t;
-    cin >> t;
-    while (t--) {
-        solve();
-    }
-    return 0;
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  int t;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
+  return 0;
 }

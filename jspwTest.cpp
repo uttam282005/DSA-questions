@@ -9,7 +9,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector<ll int>
+#define vi vector<int>
 #define vs vector<string>
 #define gcd(a, b) __gcd(a, b)
 #define pii pair<int, int>
@@ -33,12 +33,27 @@ auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
 // don't forget long long
 
 void solve() {
-  ll x, y, k;
-  cin >> x >> y >> k;
-  if ((k * y + k - 1) % (x - 1) == 0)
-    cout << (k * y + k - 1) / (x - 1) + k << endl;
-  else
-    cout << (k * y + k - 1) / (x - 1) + k + 1 << endl;
+  int n, k;
+  cin >> n >> k;
+  vector<string> v;
+  rep(i, 0, n) {
+    string a;
+    rep(j, 0, n) {
+      cin >> a;
+      v.pb(a);
+    }
+  }
+  int i = 0;
+  while (i < n) {
+    int j = 0;
+    while (j < n) {
+      cout << v[i][j];
+      j += k;
+    }
+    i += k;
+    cout << endl;
+  }
+  cout << endl;
 }
 
 int main() {

@@ -19,14 +19,18 @@ using namespace std;
 #define sortv(vec) sort(vec.begin(), vec.end())
 #define itr(container) for (auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
-#define rep(i, a, b) for (ll i = a; i < b; i++)
-
-ll MOD = 1e9 + 7;
+#define rep(i, a, b) for (int i = a; i < b; i++)
 
 void solve() {
-  ll n;
+  int n;
   cin >> n;
-  ll ans = ((((n * (n + 1)) % MOD) * (4 * n - 1)) % MOD * 337) % MOD;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  vi pre(n);
+  pre[0] = v[0];
+  rep(i, 1, n) pre[i] = pre[i - 1] + v[i];
+  ll ans = INT_MIN;
+  rep(i, 0, n - 1) { ans = max(ans, gcd(pre[i], pre[n - 1] - pre[i])); }
   cout << ans << endl;
 }
 
