@@ -20,23 +20,28 @@ using namespace std;
 #define itr(container) for (auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
-
+const ll mod = 1e9 + 7;
 void solve() {
-  int n;
+  ll n;
   cin >> n;
-  vi v(n);
-  rep(i, 0, n) cin >> v[i];
-  ll sum = 0;
-  ll max_sum = LONG_LONG_MIN;
+  vi a(n), b(n);
+  rep(i, 0, n) cin >> a[i];
+  rep(i, 0, n) cin >> b[i];
+  sortv(a);
+  sortv(b);
+  vi count(n);
+  ll j = 0;
   rep(i, 0, n) {
-    sum += v[i];
-    max_sum = max(max_sum, sum);
-    if (sum < 0 || abs(v[i]) % 2 == abs(v[i + 1]) % 2)
-      sum = 0;
+    while (a[j] <= b[i] && j != n)
+      j++;
+    if (j != n)
+      count[i] = n - j;
   }
-  cout << max_sum << endl;
+  sortv(count);
+  ll ans = 1;
+  rep(i, 0, n) { ans = ((ans % mod) * ((count[i] - i) % mod)) % mod; }
+  cout << ans << endl;
 }
-
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);

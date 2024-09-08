@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 #define ff first
@@ -9,7 +10,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define um unordered_map
-#define vi vector<ll int>
+#define vi vector<int>
 #define vs vector<string>
 #define gcd(a, b) __gcd(a, b)
 #define pii pair<int, int>
@@ -26,13 +27,21 @@ void solve() {
   cin >> n;
   vi v(n);
   rep(i, 0, n) cin >> v[i];
-  ll sum = 0;
+  ll sum = max(v[0], 0);
   ll max_sum = LONG_LONG_MIN;
-  rep(i, 0, n) {
-    sum += v[i];
-    max_sum = max(max_sum, sum);
-    if (sum < 0 || abs(v[i]) % 2 == abs(v[i + 1]) % 2)
+  rep(i, 1, n) {
+    if (v[i] % 2 != v[i - 1] % 2) {
+      sum += v[i];
+      max_sum = max(max_sum, sum);
+      if (sum < 0)
+        sum = 0;
+    } else {
       sum = 0;
+      sum += v[i];
+      max_sum = max(max_sum, sum);
+      if (sum < 0)
+        sum = 0;
+    }
   }
   cout << max_sum << endl;
 }

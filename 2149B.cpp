@@ -13,6 +13,7 @@ using namespace std;
 #define vs vector<string>
 #define gcd(a, b) __gcd(a, b)
 #define pii pair<int, int>
+#define find(v, a) find(v.begin(), v.end(), a)
 #define all(x) (x.begin(), x.end())
 #define umii unordered_map<int, int>
 #define sorta(arr) sort(begin(arr), end(arr))
@@ -20,21 +21,41 @@ using namespace std;
 #define itr(container) for (auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
+#define acc(v) accumulate(v.begin(), v.end(), 0)
+#define cnt(v, a) count(v.begin(), v.end(), a)
+#define rev(v) reverse(v.begin(), v.end())
+#define maxe(v) *max_element(v.begin(), v.end())
+#define mine(v) *min_element(v.begin(), v.end())
+#define repe(i, a, b) for (int i = a; i <= b; i++)
+
+auto print_con = [](auto v) { itr(v) cout << it << " "; };
+auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
+// don't forget long long
 
 void solve() {
   int n;
   cin >> n;
   vi v(n);
-  rep(i, 0, n) cin >> v[i];
   ll sum = 0;
-  ll max_sum = LONG_LONG_MIN;
+  ll zr = 0;
+  ll cnt = 0;
+  ll ls = INT_MAX;
   rep(i, 0, n) {
-    sum += v[i];
-    max_sum = max(max_sum, sum);
-    if (sum < 0 || abs(v[i]) % 2 == abs(v[i + 1]) % 2)
-      sum = 0;
+    cin >> v[i];
+    sum += abs(v[i]);
+    if (v[i] == 0)
+      zr++;
+    if (v[i] < 0) {
+      cnt++;
+      ls = min(ls, abs(v[i]));
+    }
   }
-  cout << max_sum << endl;
+  if (cnt % 2 == 0)
+    cout << sum << endl;
+  else if (zr == 0) {
+    cout << sum + 2 * ls << endl;
+  } else
+    cout << sum << endl;
 }
 
 int main() {
