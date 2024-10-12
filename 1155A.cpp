@@ -13,6 +13,7 @@ using namespace std;
 #define vs vector<string>
 #define gcd(a, b) __gcd(a, b)
 #define pii pair<int, int>
+#define find(v, a) find(v.begin(), v.end(), a)
 #define all(x) (x.begin(), x.end())
 #define umii unordered_map<int, int>
 #define sorta(arr) sort(begin(arr), end(arr))
@@ -20,43 +21,37 @@ using namespace std;
 #define itr(container) for (auto &it : container)
 #define debug(x) cout << #x << '=' << x << endl
 #define rep(i, a, b) for (int i = a; i < b; i++)
+#define acc(v) accumulate(v.begin(), v.end(), 0)
+#define cnt(v, a) count(v.begin(), v.end(), a)
+#define rev(v) reverse(v.begin(), v.end())
+#define maxe(v) *max_element(v.begin(), v.end())
+#define mine(v) *min_element(v.begin(), v.end())
 #define repe(i, a, b) for (int i = a; i <= b; i++)
+
+auto print_con = [](auto v) { itr(v) cout << it << " "; };
+auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
+// don't forget long long
 
 void solve() {
   int n;
   cin >> n;
-  vi v(n);
-  rep(i, 0, n) cin >> v[i];
-  vi pre(n);
-  pre[0] = v[0];
-  rep(i, 1, n) { pre[i] = pre[i - 1] + v[i]; }
-  ll max_diff = 0;
-  ll wt;
-  repe(i, 1, n) {
-    if (n % i != 0) continue;
-    ll min_wt = LONG_LONG_MAX;
-    ll max_wt = LONG_LONG_MIN;
-    for (int j = 2 * i - 1; j < n; j = j + i) {
-      wt = pre[j] - pre[j - i];
-      max_wt = max(max_wt, wt);
-      min_wt = min(min_wt, wt);
+  string s;
+  cin >> s;
+  rep(i, 0, s.size() - 1) {
+    if (s[i] > s[i + 1]) {
+      cout << "YES\n";
+      cout << i + 1 << " " << i + 2 << endl;
+      return;
     }
-    max_wt = max(max_wt, pre[i - 1]);
-    min_wt = min(min_wt, pre[i - 1]);
-    max_diff = max(max_diff, max_wt - min_wt);
   }
-  cout << max_diff << endl;
+  cout << "NO\n";
 }
 
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   cout.tie(NULL);
-  int t;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
 
   return 0;
 }

@@ -33,27 +33,48 @@ auto print_arr = [](auto arr[], int n) { rep(i, 0, n) cout << arr[i] << " "; };
 // don't forget long long
 
 void solve() {
-  int n, k;
-  cin >> n >> k;
-  vector<string> v;
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  int a, b;
   rep(i, 0, n) {
-    string a;
-    rep(j, 0, n) {
-      cin >> a;
-      v.pb(a);
+    if (v[i] != v[n - 1 - i]) {
+      a = v[i];
+      b = v[n - 1 - i];
+      break;
     }
   }
-  int i = 0;
-  while (i < n) {
-    int j = 0;
-    while (j < n) {
-      cout << v[i][j];
-      j += k;
-    }
-    i += k;
-    cout << endl;
+  vi temp;
+  rep(i, 0, n) {
+    if (v[i] != a)
+      temp.pb(v[i]);
   }
-  cout << endl;
+  int a_size = temp.size();
+  bool flag_a = true;
+  bool flag_b = true;
+  rep(i, 0, a_size) {
+    if (temp[i] != temp[a_size - 1 - i]) {
+      flag_a = false;
+      break;
+    }
+  }
+  temp.clear();
+  rep(i, 0, n) {
+    if (v[i] != b)
+      temp.pb(v[i]);
+  }
+  int b_size = temp.size();
+  rep(i, 0, temp.size()) {
+    if (temp[i] != temp[b_size - 1 - i]) {
+      flag_b = false;
+      break;
+    }
+  }
+  if (flag_a || flag_b)
+    cout << "YES\n";
+  else
+    cout << "NO\n";
 }
 
 int main() {
