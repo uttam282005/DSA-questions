@@ -10,9 +10,7 @@ using namespace std;
 #define sz(x) (int)(x).size()
 #define rep(i, a, b) for (int i = (a); i < (b); ++i)
 #define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
-#define itr(v)                                                                 \
-  for (auto it : v)                                                            \
-    cout << it << endl;
+#define itr(v) for (auto it : v)
 
 template <typename Arg1> void _f(const char *name, Arg1 &&arg1) {
   cout << name << ":" << arg1 << endl;
@@ -64,7 +62,32 @@ int main() {
 void solve() {
   // Solution
   // Start coding here
-  
+  int n, m;
+  cin >> n >> m;
+  vi v;
+  rep(i, 0, m) {
+    int a;
+    cin >> a;
+    v.push_back(a);
+  }
+  sort(v.begin(), v.end());
+  v.push_back(v[0]);
+  vi d;
+  rep(i, 0, m) { d.push_back((v[i + 1] - v[i] - 1 + n) % n); };
+  sort(d.begin(), d.end());
+  int l = m - 1;
+  int saved = 0;
+  int days = 0;
+  while (d[l] > 1 && l >= 0) {
+    saved += (d[l] - 1);
+    days += 2;
+    l--;
+    if (l < 0) break;
+    d[l] = max(d[l] - 2 * days, 0);
+  }
+  if (d[l] == 1)
+    saved++;
+  cout << n - saved << endl;
 }
 
 /*

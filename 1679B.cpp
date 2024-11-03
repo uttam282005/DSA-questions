@@ -13,7 +13,7 @@ using namespace std;
 #define um unordered_map
 #define pb push_back
 #define umii unordered_map<int, int>
-#define sort(arr) sort(arr.begin(), arr.end())
+#define sorta(arr) sort(begin(arr), end(arr))
 
 // Typedefs
 typedef long long ll;
@@ -58,21 +58,68 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  // int t = 1;
+  // cin >> t;
+  // while (t--) {
+  solve();
+  // }
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, q;
+  cin >> n >> q;
+  vi v(n);
+  rep(i, 0, n) { cin >> v[i]; }
+
+  ll sum = 0;
+  rep(i, 0, n) sum += v[i]; // Initialize sum of array elements
+
+  ll last = -1; // This will store the value if a type 2 query is made
+  unordered_map<int, ll>
+      modified; // To keep track of individual updates after a type 2 query
+
+  rep(i, 0, q) {
+    int t;
+    cin >> t;
+
+    if (t == 1) {
+      // Update a single element
+      int in;
+      cin >> in;
+      ll x;
+      cin >> x;
+      --in; // Convert to 0-based index
+
+      // If type 2 query has been made before, the original value is `last`,
+      // else it's v[in]
+      ll original_value =
+          (last == -1 || modified.find(in) != modified.end()) ? v[in] : last;
+
+      // Update the sum and store the new value in the array
+      sum = sum - original_value + x;
+      v[in] = x;        // Store the updated value
+      modified[in] = x; // Mark this index as modified after a type 2 query
+
+      cout << sum << endl;
+    } else if (t == 2) {
+      // Update the entire array with the same value
+      ll x;
+      cin >> x;
+
+      // Set the new sum
+      sum = x * n;
+
+      // Mark that the array is now considered as all `x`
+      last = x;
+      modified.clear(); // Clear individual updates
+      cout << sum << endl;
+    }
+  }
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-10-18
+Date: 2024-10-13
 Problem: Problem Name/URL
 */

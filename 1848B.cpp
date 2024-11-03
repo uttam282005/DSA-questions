@@ -3,22 +3,22 @@ using namespace std;
 
 // Defines
 #define db double
-#define ll long long
 #define all(x) (x).begin(), (x).end()
 #define sz(x) (int)(x).size()
 #define rep(i, a, b) for (int i = a; i < b; i++)
 #define itr(container) for (auto &it : container)
 #define ss second
 #define gcd(a, b) __gcd(a, b)
-#define vi vector<ll>
 #define vs vector<string>
 #define um unordered_map
+#define pb push_back
 #define umii unordered_map<int, int>
-#define pii pair<int, int>
-#define sorta(arr) sort(begin(arr), end(arr))
-#define sortv(vec) sort(vec.begin(), vec.end())
+#define sortv(arr) sort(arr.begin(), arr.end())
 
 // Typedefs
+typedef long long ll;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
 typedef vector<ll> vll;
 typedef vector<pii> vpii;
 
@@ -31,7 +31,7 @@ const ll LLINF = 1e18;
 #define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
 
 // Sorting Functions
-template <typename T> void sort_asc(vector<T> &v) { sort(v.begin(), v.end()); }
+template <typename T> void sort_vec(vector<T> &v) { sort(v.begin(), v.end()); }
 
 template <typename T> void sort_desc(vector<T> &v) {
   sort(v.begin(), v.end(), greater<T>());
@@ -67,49 +67,44 @@ int main() {
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  char c;
-  cin >> c;
-  string s;
-  cin >> s;
-
-  bool ok = true;
-  rep(i, 0, n) {
-    if (s[i] != c) {
-      ok = false;
+  // Solution
+  // Start coding here
+  int n, k;
+  cin >> n >> k;
+  vi v(n);
+  rep(i, 0, n) { cin >> v[i]; }
+  vi in(n);
+  iota(in.begin(), in.end(), 1);
+  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
+  sort_vec(v);
+  vector<vector<int>> color_indexes(v[n - 1]);
+  rep(i, 1, n) {
+    if (v[i] != v[i - 1]) {
+      color_indexes[v[i] - 1].push_back(in[i] - 1);
+      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
+      continue;
     }
+    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
   }
-
-  if (ok) {
-    cout << 0 << endl;
-    return;
+  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
+  color_indexes[v[0] - 1].push_back(in[0] - 1);
+  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
+  vi maxe;
+  rep(i, 0, color_indexes.size()) {
+    if (color_indexes[i].size() >= 2)
+      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
   }
-
-  if (s[n - 1] == c) {
-    cout << 1 << endl;
-    cout << n << endl;
-    return;
+  sort_desc(maxe);
+  rep(i, 0, color_indexes.size()) {
+    cout << i + 1 << " : ";
+    rep(j, 0, color_indexes[i].size()) cout << color_indexes[i][j] << " ";
+    cout << endl;
   }
-
-  rep(i, 1, n + 1) {
-    ok = true;
-    rep(j, i, n + 1) {
-      ok &= (s[j - 1] == c);
-      j += i - 1;
-    }
-    if (ok) {
-      cout << 1 << endl;
-      cout << i << endl;
-      return;
-    }
-  }
-  cout << 2 << endl;
-  cout << n - 1 << " " << n << endl;
+  rep(i, 0, maxe.size()) cout << maxe[i] << " ";
+  // cout << maxe.back() << endl;
 }
-
 /*
 Author: Uttam Raj
-Date: 2024-10-07
+Date: 2024-10-24
 Problem: Problem Name/URL
 */
