@@ -23,7 +23,7 @@ typedef vector<ll> vll;
 typedef vector<pii> vpii;
 
 // Constants
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 const int INF = 1e9;
 const ll LLINF = 1e18;
 
@@ -65,40 +65,35 @@ int main() {
   }
   return 0;
 }
+long long factorial(int x) {
+  if (x == 0)
+    return 1;
+  return (factorial(x - 1) % MOD * x % MOD) % MOD;
+}
 
 void solve() {
   // Solution
   // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+  string s;
+  cin >> s;
+  s += '4';
+  long long cnt = 0;
+  long long numberOfOps = 0;
+  long long seq = 1;
+  rep(i, 0, s.size() - 1) {
+    if (s[i] != s[i + 1]) {
+      numberOfOps += cnt;
+      seq = ((seq % MOD) * (cnt + 1) % MOD) % MOD;
+      cnt = 0;
+    } else
+      cnt++;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << numberOfOps << " " << (seq % MOD * factorial(numberOfOps) % MOD) % MOD
+       << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-11-12
 Problem: Problem Name/URL
 */

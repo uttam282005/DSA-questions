@@ -58,47 +58,42 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
+  int n;
+  cin >> n;
   vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+  rep(i, 0, n) {
+    cin >> v[i];
+    v[i] = abs(v[i]);
+  }
+  sort(all(v));
+  ll cnt = 0;
+  rep(i, 0, n) {
+    int y_index = -1;
+    int low = i + 1;
+    int high = n - 1;
+    int mid;
+    while (low <= high) {
+      mid = (low + high) / 2;
+      if (abs(v[mid] - v[i]) > v[i])
+        high = mid - 1;
+      else {
+        low = mid + 1;
+        y_index = max(y_index, mid);
+      }
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+    if (y_index != -1)
+      cnt += y_index - i;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << cnt << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-12
 Problem: Problem Name/URL
 */

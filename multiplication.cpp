@@ -58,47 +58,39 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
-
-void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+ll nose(ll n, int size) {
+  ll nose = 0;
+  for (int i = 1; i <= size; i++) {
+    nose += min(n / i, 1ll * size);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  return nose;
 }
+void solve() {
+  ll n;
+  cin >> n;
+
+  ll l = 1;
+  ll r = n * n;
+  ll mid;
+  while (l + 1 < r) {
+    mid = (l + r) / 2;
+    ll nse = nose(mid, n);
+    if (nse >= (n * n + 1) / 2)
+      r = mid;
+    else
+      l = mid + 1;
+  }
+  if (nose(l, n) >= (n * n + 1) / 2)
+    cout << l << endl;
+  else if (nose(r, n) >= (n * n + 1) / 2)
+    cout << r << endl;
+}
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-08
 Problem: Problem Name/URL
 */

@@ -65,40 +65,36 @@ int main() {
   }
   return 0;
 }
+const int K = 1000;
+const int P = (int)log2(1e6);
+long long power(int k, int p) {
+  if (p == 0)
+    return 1;
+  long long pow = power(k, p / 2);
+  if (p % 2 == 0)
+    return pow * pow;
+  else
+    return pow * pow * k;
+}
 
 void solve() {
   // Solution
   // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+  int n;
+  cin >> n;
+  rep(k, 2, K + 1) {
+    rep(p, 3, P + 1) {
+      if (power(k, p) - 1 == n * (k - 1)) {
+        cout << "YES\n";
+        return;
+      }
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << "NO\n";
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-04
 Problem: Problem Name/URL
 */

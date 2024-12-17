@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -58,7 +59,7 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
+  int t;
   cin >> t;
   while (t--) {
     solve();
@@ -67,38 +68,38 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
+  int n;
+  cin >> n;
   vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
+  vi p(n, -1); // `p` stores the last different element's index
+
+  rep(i, 0, n) cin >> v[i];
+
+  // Populate the `p` vector to track the last unique element for each position
+  for (int i = 1; i < n; i++) {
+    p[i] = p[i - 1];
     if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+      p[i] = i - 1; // Store the last different index
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
+
+  int q;
+  cin >> q;
+
+  while (q--) {
+    int l, r;
+    cin >> l >> r;
+    l--;
+    r--;
+    if (p[r] < l)
+      cout << -1 << " " << -1 << endl;
+    else
+      cout << p[r] + 1 << " " << r + 1 << endl;
   }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-11-06
 Problem: Problem Name/URL
 */

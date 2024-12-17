@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -58,47 +59,48 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
+}
+int good(ll mid, vll v) {
+  ll cnt = 1;
+  long long sum = 0;
+  rep(i, 0, v.size()) {
+    sum += v[i];
+    if (sum > mid) {
+      cnt++;
+      sum = v[i];
+    }
+  }
+  return cnt;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
+  ll n;
+  ll k;
   cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+  vll v(n);
+  rep(i, 0, n) cin >> v[i];
+  long long l = *max_element(v.begin(), v.end());
+  long long r = accumulate(v.begin(), v.end(), 0ll);
+  long long mid;
+  while (l + 1 < r) {
+    mid = (r - l) / 2 + l;
+    long long num = good(mid, v);
+    if (num <= k)
+      r = mid;
+    else
+      l = mid + 1;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  if (good(l, v) == k)
+    cout << l << endl;
+  else if (good(r, v) == k)
+    cout << r << endl;
+  // cout << good(2836207767, v);
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-08
 Problem: Problem Name/URL
 */

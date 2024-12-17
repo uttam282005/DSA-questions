@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -58,47 +59,41 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
   // Solution
   // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+  int n;
+  cin >> n;
+  vi p(n);
+  rep(i, 0, n) cin >> p[i];
+  int m;
+  cin >> m;
+  vi j(m);
+  rep(i, 0, m) cin >> j[i];
+  vi prefix_array(n);
+  prefix_array[0] = p[0];
+  rep(i, 1, n) prefix_array[i] = prefix_array[i - 1] + p[i];
+  rep(i, 0, m) {
+    int low = 0;
+    int high = n - 1;
+    int mid;
+    while (low < high) {
+      mid = (low + high) / 2;
+      if (prefix_array[mid] >= j[i])
+        high = mid;
+      else
+        low = mid + 1;
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+    cout << low + 1 << endl;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-10
 Problem: Problem Name/URL
 */

@@ -65,40 +65,56 @@ int main() {
   }
   return 0;
 }
-
-void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
-  }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+db checker(vector<db> v, db avg, int n) {
+  vector<db> d(n);
+  d[0] = v[0];
+  d[1] = v[1] + max(d[0], db(0));
+  rep(i, 2, n) { d[i] = v[i] + max(d[i - 1], d[i - 2]); }
+  return max(d[n - 1], d[n - 2]);
 }
+void solve() {
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  db low = 0;
+  db high = 1e9;
+  db mid;
+  db avg;
+  db error = 1e-4;
+  rep(i, 0, 100) {
+    mid = (low + high) / 2;
+    vector<db> t(n);
+    rep(i, 0, n) t[i] = v[i] - mid;
+    if (checker(t, mid, n) >= 0) {
+      avg = mid;
+      low = mid + error;
+    } else {
+      high = mid - error;
+    }
+  }
+  ll l = 0;
+  ll h = 1e9;
+  ll mid2;
+  ll median;
+
+  while (l <= h) {
+    mid2 = (l + h) / 2;
+    vector<db> m(n);
+    rep(i, 0, n) m[i] = (v[i] >= mid2 ? 1 : -1);
+    if (checker(m, mid2, n) > 0) {
+      median = mid2;
+      l = mid2 + 1;
+    } else {
+      h = mid2 - 1;
+    }
+  }
+
+  cout << avg << " " << median;
+}
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-17
 Problem: Problem Name/URL
 */

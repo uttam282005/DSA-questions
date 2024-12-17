@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#include <iomanip>
+#include <ios>
 using namespace std;
 
 // Defines
@@ -58,47 +60,50 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
+}
+bool checker(db ratio, vector<double> v, int k) {
+  sort(all(v));
+  db sum = 0;
+  for (int i = 0; i < k; i++)
+    sum += v[v.size() - i - 1];
+  return sum >= 0;
 }
 
 void solve() {
   // Solution
   // Start coding here
-  int n, k;
+  int n;
+  int k;
   cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+  vector<pair<db, db>> p(n);
+  rep(i, 0, n) {
+    cin >> p[i].first;
+    cin >> p[i].second;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
+
+  db error = 1e-7;
+  db low = error;
+  db high = 1e6;
+  db mid;
+  db ans = 0;
+  for (int i = 0; i < 60; i++) {
+    mid = (low + high) / 2;
+    // debug(low, mid, high, ans);
+    vector<db> v(n);
+    rep(i, 0, n) { v[i] = p[i].first - mid * p[i].second; }
+    if (checker(mid, v, k)) {
+      ans = mid;
+      low = mid;
+    } else
+      high = mid - error;
   }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << setprecision(8) << fixed << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-17
 Problem: Problem Name/URL
 */

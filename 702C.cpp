@@ -52,53 +52,69 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 // Function prototypes
 void solve();
 
+bool check(int r, vector<int> &c, vi &t, int n, int m);
 // Main function
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
+bool check(int r, vector<int> &c, vi &t, int n, int m) {
+  rep(i, 0, n) {
+    int low = 0;
+    int high = m - 1;
+    int mid;
+    bool covered = false;
+    while (low <= high) {
+      mid = (low + high) / 2;
+      // debug(low, mid, high);
+      if (t[mid] - c[i] < -r)
+        low = mid + 1;
+      else if (t[mid] - c[i] > r)
+        high = mid - 1;
+      else {
+        covered = true;
+        break;
+      }
+    }
+    if (!covered)
+      return false;
+  }
+  return true;
+}
 void solve() {
   // Solution
   // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+  int n, m;
+  cin >> n >> m;
+  vi c(n);
+  vi t(m);
+  rep(i, 0, n) cin >> c[i];
+  rep(i, 0, m) cin >> t[i];
+  int low = 0;
+  int high = 2 * 1e9;
+  int mid;
+  while (low + 1 < high) {
+    mid = (high - low) / 2 + low;
+    // debug(low, mid, high);
+    if (check(mid, c, t, n, m))
+      high = mid;
+    else
+      low = mid + 1;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  // cout << check(2, c, t);
+  if (check(low, c, t, n, m))
+    cout << low << endl;
+  else
+    cout << high << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-11
 Problem: Problem Name/URL
 */

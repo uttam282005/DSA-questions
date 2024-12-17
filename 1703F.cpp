@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -65,40 +66,29 @@ int main() {
   }
   return 0;
 }
+vector<int> sortV(vector<int> f, vector<int> v, int i) {
+  sort(f.begin() + i + 1, f.end(),
+       [&](int a, int b) { return v[a - 1] < v[b - 1]; });
+  return f;
+}
 
 void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
+  int n;
+  cin >> n;
   vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
+  rep(i, 0, n) cin >> v[i];
+  vi f;
+  long long ans = 0;
+  rep(i, 0, n) {
+    if (v[i] >= i + 1)
       continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+    ans += lower_bound(f.begin(), f.end(), v[i]) - f.begin();
+    f.pb(i + 1);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << ans << endl;
 }
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-06
 Problem: Problem Name/URL
 */

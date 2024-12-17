@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -58,47 +59,42 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
-
-void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
+bool possible(ll time, vll &v, int t) {
+  ll machines_made = 0;
+  rep(i, 0, v.size()) {
+    machines_made += (time / v[i]);
+    if (machines_made >= t)
+      return true;
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  return machines_made >= t;
 }
+void solve() {
+  int n;
+  int t;
+  cin >> n >> t;
+  vll v(n);
+  rep(i, 0, n) cin >> v[i];
+  ll l = 0;
+  ll r = 1e18;
+  ll mid;
+  while (l + 1 < r) {
+    mid = (r - l) / 2 + l;
+    if (possible(mid, v, t))
+      r = mid;
+    else
+      l = mid + 1;
+  }
+  if (possible(l, v, t))
+    cout << l << endl;
+  else
+    cout << r << endl;
+}
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-08
 Problem: Problem Name/URL
 */

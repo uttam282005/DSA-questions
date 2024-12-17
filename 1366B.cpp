@@ -1,6 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+struct operation {
+  int l;
+  int r;
+};
+
 // Defines
 #define db double
 #define all(x) (x).begin(), (x).end()
@@ -67,38 +72,46 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+  int n;
+  int x;
+  int m;
+  cin >> n >> x >> m;
+  x--;
+  vector<operation> v(m);
+  rep(i, 0, m) {
+    cin >> v[i].l;
+    cin >> v[i].r;
+    v[i].l--;
+    v[i].r--;
+  }
+  operation valid;
+  int start = -1;
+  rep(i, 0, m) {
+    if (x >= v[i].l && x <= v[i].r) {
+      valid = v[i];
+      start = i;
+      break;
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
+  if (start == -1) {
+    cout << 1 << endl;
+    return;
   }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  int lb = valid.l;
+  int ub = valid.r;
+  rep(i, start + 1, m) {
+    int ll = max(v[i].l, lb);
+    int ul = min(v[i].r, ub);
+    if (ll <= ul) {
+      lb = min(lb, v[i].l);
+      ub = max(ub, v[i].r);
+    }
+  }
+  cout << ub - lb + 1 << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-14
 Problem: Problem Name/URL
 */

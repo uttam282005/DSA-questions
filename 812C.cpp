@@ -58,47 +58,40 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
-
-void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
-    }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
-  }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+ll cost(int k, vll v, int n, int s) {
+  ll total_cost = 0;
+  rep(i, 0, n) v[i] = v[i] + 1ll * k * (i + 1);
+  sort(all(v));
+  rep(i, 0, k) total_cost += v[i];
+  return total_cost;
 }
+void solve() {
+  int n, s;
+  cin >> n >> s;
+  vll v(n);
+  rep(i, 0, n) cin >> v[i];
+  // sort(all(v));
+  int low = 0;
+  int high = n;
+  int mid;
+  while (low + 1 < high) {
+    mid = (low + high) / 2;
+    if (cost(mid, v, n, s) <= s)
+      low = mid;
+    else
+      high = mid - 1;
+  }
+  if (cost(high, v, n, s) <= s)
+    cout << high << " " << cost(high, v, n, s);
+  else
+    cout << low << " " << cost(low, v, n, s);
+}
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-13
 Problem: Problem Name/URL
 */

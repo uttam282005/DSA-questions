@@ -65,40 +65,39 @@ int main() {
   }
   return 0;
 }
+ll lcm(ll a, ll b) { return a * b / gcd(a, b); }
 
 void solve() {
   // Solution
   // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
-  rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+  ll n;
+  cin >> n;
+  ll min_lcm = INT_MAX;
+  ll a;
+  ll b;
+  rep(i, 2, (int)sqrt(n) + 1) {
+    if (n % i == 0) {
+      if (lcm(i, n - i) < min_lcm) {
+        a = i;
+        b = n - i;
+        min_lcm = lcm(i, n - i);
+      }
+      if (lcm(n / i, n - n / i) < min_lcm) {
+        a = n / i;
+        b = n - n / i;
+        min_lcm = lcm(n / i, n - n / i);
+      }
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
+  if (n - 1 < min_lcm) {
+    a = 1;
+    b = n - 1;
   }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << a << " " << b << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-12-15
 Problem: Problem Name/URL
 */

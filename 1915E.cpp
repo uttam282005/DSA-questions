@@ -65,40 +65,64 @@ int main() {
   }
   return 0;
 }
+// bool f(ll odd_sum, ll even_sum, int l, int r, vector<int> v) {
+//   if (l >= r)
+//     return false;
+//   if (odd_sum == even_sum)
+//     return true;
+//   if (odd_sum > even_sum) {
+//     if ((l + 1) & 1 && (r + 1) & 1) {
+//       return f(odd_sum - v[l], even_sum, l + 1, r, v);
+//       return f(odd_sum - v[r], even_sum, l, r - 1, v);
+//     } else if ((l + 1) & 1)
+//       return f(odd_sum - v[l], even_sum, l + 1, r, v);
+//     else if ((r + 1) & 1)
+//       return f(odd_sum - v[r], even_sum, l, r - 1, v);
+//     else
+//       return false;
+//   } else {
+//     if (!((l + 1) & 1) && !((r + 1) & 1)) {
+//       return f(odd_sum, even_sum - v[l], l + 1, r, v);
+//       return f(odd_sum, even_sum - v[r], l, r - 1, v);
+//     } else if (!((l + 1) & 1))
+//       return f(odd_sum, even_sum - v[l], l + 1, r, v);
+//     else if (!((r + 1) & 1))
+//       return f(odd_sum, even_sum - v[r], l, r - 1, v);
+//     else
+//       return false;
+//   }
+// }
 
 void solve() {
-  // Solution
-  // Start coding here
-  int n, k;
-  cin >> n >> k;
-  vi v(n);
-  rep(i, 0, n) { cin >> v[i]; }
-  vi in(n);
-  iota(in.begin(), in.end(), 1);
-  sort(in.begin(), in.end(), [&](int i, int j) { return v[i - 1] < v[j - 1]; });
-  sort_vec(v);
-  vector<vector<int>> color_indexes(v[n - 1]);
+  int n;
+  cin >> n;
+  vi v(n + 1);
+  vll diff(n);
+  ll prefix_odd = 0;
+  ll prefix_even = 0;
+  rep(i, 1, n + 1) {
+    cin >> v[i];
+    if (i & 1)
+      prefix_odd += v[i];
+    else
+      prefix_even += v[i];
+    diff[i - 1] = prefix_odd - prefix_even;
+  }
+  sort(diff.begin(), diff.end());
+  if (diff[0] == 0) {
+    cout << "YES\n";
+    return;
+  }
   rep(i, 1, n) {
-    if (v[i] != v[i - 1]) {
-      color_indexes[v[i] - 1].push_back(in[i] - 1);
-      color_indexes[v[i - 1] - 1].push_back(n - in[i - 1]);
-      continue;
+    if (diff[i] == diff[i - 1] || diff[i] == 0) {
+      cout << "YES\n";
+      return;
     }
-    color_indexes[v[i] - 1].push_back(in[i] - in[i - 1] - 1);
   }
-  color_indexes[v[n - 1] - 1].push_back(n - in[n - 1]);
-  color_indexes[v[0] - 1].push_back(in[0] - 1);
-  rep(i, 0, color_indexes.size()) sort_desc(color_indexes[i]);
-  vi maxe;
-  rep(i, 0, color_indexes.size()) {
-    if (color_indexes[i].size() >= 2)
-      maxe.pb(max(color_indexes[i][0] / 2, color_indexes[i][1]));
-  }
-  sort_desc(maxe);
-  cout << maxe.back() << endl;
+  cout << "NO\n";
 }
 /*
 Author: Uttam Raj
-Date: 2024-10-24
+Date: 2024-11-08
 Problem: Problem Name/URL
 */
