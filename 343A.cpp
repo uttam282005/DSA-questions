@@ -58,21 +58,25 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  ll a, b;
+  cin >> a >> b;
+  ll ans = 0;
+  while (a != 0) {
+    if (a < b)
+      swap(a, b);
+    ans += a / b;
+    a %= b;
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-19
 Problem: Problem Name/URL
 */

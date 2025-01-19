@@ -14,6 +14,7 @@ using namespace std;
 #define pb push_back
 #define umii unordered_map<int, int>
 #define sortv(arr) sort(arr.begin(), arr.end())
+#define input(arr, n) rep(i, 0, n) cin >> arr[i]
 
 // Typedefs
 typedef long long ll;
@@ -67,12 +68,26 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, k, d;
+  cin >> n >> k >> d;
+  vi a(n);
+  input(a, n);
+  map<int, int> cnt;
+  int ans = n + 1;
+  rep(i, 0, d) { cnt[a[i]]++; }
+  ans = cnt.size();
+  rep(i, d, n) {
+    cnt[a[i]]++;
+    cnt[a[i - d]]--;
+    if (cnt[a[i - d]] == 0)
+      cnt.erase(a[i - d]);
+    ans = min(ans, (int)cnt.size());
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-04
 Problem: Problem Name/URL
 */

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -58,21 +59,44 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  ll n, c;
+  cin >> n >> c;
+  string s;
+  cin >> s;
+  int cnt_a = 0;
+  int cnt_b = 0;
+  int ans = INT_MIN;
+  int l = 0;
+  ll rudeness = 0;
+  rep(i, 0, n) {
+    if (s[i] == 'a')
+      cnt_a++;
+    if (s[i] == 'b') {
+      cnt_b++;
+      rudeness += cnt_a;
+    }
+    while (l <= i && rudeness > c) {
+      if (s[l] == 'a') {
+        cnt_a--;
+        rudeness -= cnt_b;
+      }
+      if (s[l] == 'b') {
+        cnt_b--;
+      }
+      l++;
+    }
+    ans = max(i - l + 1, ans);
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-12
 Problem: Problem Name/URL
 */

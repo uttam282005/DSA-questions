@@ -58,21 +58,37 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, s;
+  cin >> n >> s;
+  vi w(n);
+  vi c(n);
+  rep(i, 0, n) cin >> w[i];
+  rep(i, 0, n) cin >> c[i];
+  vll prefix(n);
+  prefix[0] = c[0];
+  rep(i, 0, n) { prefix[i] = prefix[i - 1] + c[i]; }
+  int l = 0;
+  ll ans = INT_MIN;
+  ll sum = 0;
+  rep(i, 0, n) {
+    sum += w[i];
+    while (l <= i && sum > s) {
+      sum -= w[l];
+      l++;
+    }
+    if (sum <= s)
+      ans = max(ans, prefix[i] - prefix[l - 1]);
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-12
 Problem: Problem Name/URL
 */

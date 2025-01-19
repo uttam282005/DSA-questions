@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -58,21 +59,33 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vi v(n);
+  int res;
+  rep(i, 1, n) {
+    cout << "? " << 1 << " " << i + 1 << endl;
+    cin >> res;
+    v[i] = res;
+  }
+  cout << "? " << 2 << " " << 3 << endl;
+  cin >> res;
+  v[0] = v[2] - res;
+  cout << "! " << endl;
+  vi a(n);
+  a[0] = v[0];
+  rep(i, 1, n) a[i] = v[i] - v[i - 1];
+  rep(i, 0, n) cout << a[i] << " ";
+  cout << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2024-12-18
 Problem: Problem Name/URL
 */

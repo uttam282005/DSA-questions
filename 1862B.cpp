@@ -67,12 +67,17 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  int ans = 0;
+  rep(i, 0, n) { ans = gcd(ans, abs(v[i] - v[n - i - 1])); }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-13
 Problem: Problem Name/URL
 */

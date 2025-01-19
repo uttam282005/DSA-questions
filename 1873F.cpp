@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -66,13 +67,56 @@ int main() {
   return 0;
 }
 
+bool good(int len, vi &a, vi &h, int max_sum) {
+  int current_len = 0;
+  ll sum = 0;
+  ll min_sum = INT_MAX;
+  int n = h.size();
+  rep(i, 0, n) {
+    sum += a[i];
+    current_len++;
+    if (current_len == len) {
+      min_sum = min(min_sum, sum);
+    }
+    if (current_len > len) {
+      sum -= a[i - len];
+      current_len--;
+    }
+    if (current_len == len) {
+      min_sum = min(min_sum, sum);
+    }
+    if (i != n - 1 && h[i] % h[i + 1] != 0) {
+      sum = 0;
+      current_len = 0;
+    }
+  }
+  return min_sum <= max_sum;
+}
+
 void solve() {
-  // Solution
-  // Start coding here
+  int n, k;
+  cin >> n >> k;
+  vi a(n);
+  rep(i, 0, n) cin >> a[i];
+  vi h(n);
+  rep(i, 0, n) cin >> h[i];
+  int low = 0;
+  int high = n;
+  int mid;
+  int ans = 0;
+  while (low <= high) {
+    mid = (low + high) / 2;
+    if (good(mid, a, h, k)) {
+      ans = mid;
+      low = mid + 1;
+    } else
+      high = mid - 1;
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-04
 Problem: Problem Name/URL
 */

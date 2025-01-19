@@ -31,22 +31,24 @@ const ll LLINF = 1e18;
 #define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
 
 // Sorting Functions
-template <typename T> void sort_vec(vector<T> &v) { sort(v.begin(), v.end()); }
+template <typename T> void sort_vec(vector<T> &v) {
+    sort(v.begin(), v.end());
+}
 
 template <typename T> void sort_desc(vector<T> &v) {
-  sort(v.begin(), v.end(), greater<T>());
+    sort(v.begin(), v.end(), greater<T>());
 }
 
 // Debug function definitions
 template <typename Arg1> void _f(const char *name, Arg1 &&arg1) {
-  cout << name << " : " << arg1 << endl;
+    cout << name << " : " << arg1 << endl;
 }
 
 template <typename Arg1, typename... Args>
 void _f(const char *names, Arg1 &&arg1, Args &&...args) {
-  const char *comma = strchr(names + 1, ',');
-  cout.write(names, comma - names) << ":" << arg1 << "|";
-  _f(comma + 1, args...);
+    const char *comma = strchr(names + 1, ',');
+    cout.write(names, comma - names) << ":" << arg1 << "|";
+    _f(comma + 1, args...);
 }
 
 // Function prototypes
@@ -54,25 +56,26 @@ void solve();
 
 // Main function
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  cout.tie(nullptr);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
-  return 0;
+    int t = 1;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n,a, b; cin >> n >> a >> b; 
+  if ((abs(b -a) - 1) % 2 == 0) cout << "NO\n";
+  else cout << "YES\n";
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-12
 Problem: Problem Name/URL
 */

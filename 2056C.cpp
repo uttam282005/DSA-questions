@@ -67,12 +67,17 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  cout << 1 << " ";
+  for (int i = 2; i <= n - 2; i++) {
+    cout << i - 1 << " ";
+  }
+  cout << "1 2\n";
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-17
 Problem: Problem Name/URL
 */

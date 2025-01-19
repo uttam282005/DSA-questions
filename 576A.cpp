@@ -57,22 +57,36 @@ int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
-
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vi isPrime(n + 1, 1);
+  vi ans;
+  rep(i, 2, n + 1) {
+    if (isPrime[i]) {
+      for (int j = i * i; j <= n; j += i)
+        isPrime[j] = 0;
+    }
+  }
+  rep(i, 2, n + 1) {
+    if (isPrime[i]) {
+      int num = 1;
+      while (num * i <= n) {
+        num *= i;
+        ans.pb(num);
+      }
+    }
+  }
+  cout << ans.size() << endl;
+  itr(ans) cout << it << " ";
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-16
 Problem: Problem Name/URL
 */

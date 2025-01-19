@@ -58,21 +58,27 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
-void solve() {
-  // Solution
-  // Start coding here
+vi primeFact(int n) {
+  vi primeFactors;
+  for (int i = 2; i * i < n; i++) {
+    while (n % i == 0) {
+      primeFactors.pb(i);
+      n /= i;
+    }
+  }
+  if (n != 1)
+    primeFactors.pb(n);
+  return primeFactors;
 }
+
+void solve() { itr(primeFact(90)) cout << it << " "; }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

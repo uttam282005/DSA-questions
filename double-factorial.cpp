@@ -57,22 +57,42 @@ int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
-
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
+ll expo(int a, int b) {
+  if (b == 0) // Base case: anything raised to power 0 is 1
+    return 1;
+  ll bin = expo(a, b / 2); // Recursive call for a^(b/2)
+  if (b % 2 == 0)          // If b is even
+    return bin * bin;
+  else // If b is odd
+    return bin * bin * a;
+}
+
 void solve() {
-  // Solution
-  // Start coding here
+  ll n;
+  cin >> n;
+  ll ans = 0;
+  ll power = 0;
+  if (n % 2 != 0) {
+    cout << 0 << endl;
+    return;
+  }
+  ll m = n / 10;
+  while (true) {
+    ll fives = m / expo(5, power);
+    ans += fives;
+    if (fives == 0)
+      break;
+    power++;
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-16
 Problem: Problem Name/URL
 */

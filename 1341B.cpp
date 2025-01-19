@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#include <climits>
+#include <deque>
 using namespace std;
 
 // Defines
@@ -67,12 +69,42 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, k;
+  cin >> n >> k;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  deque<int> q;
+  int p = -1;
+  int l = 0;
+
+  rep(i, 1, k - 1) {
+    if (v[i] > v[i - 1] && v[i] > v[i + 1]) {
+      q.push_back(i);
+    }
+  }
+
+  if ((int)q.size() > p) {
+    p = q.size();
+    l = 0;
+  }
+
+  rep(i, k - 1, n - 1) {
+    if (v[i] > v[i - 1] && v[i] > v[i + 1]) {
+      q.push_back(i);
+    }
+    while (!q.empty() && q.front() <= i - k + 2) {
+      q.pop_front();
+    }
+    if ((int)q.size() > p) {
+      p = q.size();
+      l = i - k + 2;
+    }
+  }
+  cout << p + 1 << " " << l + 1 << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-01
 Problem: Problem Name/URL
 */

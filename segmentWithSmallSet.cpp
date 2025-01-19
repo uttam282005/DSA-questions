@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <map>
 using namespace std;
 
 // Defines
@@ -58,21 +59,35 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, k;
+  cin >> n >> k;
+  vi v(n);
+  map<int, int> cnt;
+  rep(i, 0, n) cin >> v[i];
+  int l = 0;
+  ll ans = 0;
+  rep(i, 0, n) {
+    cnt[v[i]]++;
+    while (l <= i && cnt.size() > k) {
+      cnt[v[l]]--;
+      if (cnt[v[l]] == 0)
+        cnt.erase(v[l]);
+      l++;
+    }
+    if (cnt.size() <= k)
+      ans += i - l + 1;
+  }
+
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-02
 Problem: Problem Name/URL
 */

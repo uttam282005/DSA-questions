@@ -67,12 +67,29 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  map<int, int> cnt;
+  vi v(n);
+  rep(i, 0, n) {
+    cin >> v[i];
+    cnt[v[i]]++;
+  }
+  vi factors(n + 1);
+  itr(cnt) {
+    int i = 1;
+    int a = it.first;
+    while (a * i <= n) {
+      factors[a * i] += it.second;
+      i++;
+    }
+  }
+  sort(all(factors));
+  cout << factors[factors.size() - 1] << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

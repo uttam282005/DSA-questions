@@ -58,21 +58,41 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vector<bool> isPrime(n + 1, true);
+  vector<int> spf(n + 1, 1e9);
+  rep(i, 1, n) {
+    if (isPrime[i]) {
+      spf[i] = i;
+      for (int j = i * i; j < n; j += i) {
+        isPrime[j] = false;
+        spf[j] = min(spf[j], i);
+      } // Time complexity - O(log(log n))
+    }
+  }
+  int m;
+  cin >> m;
+  vector<pair<int, int>> primeFactorisation;
+  while (m != 1) {
+    int cnt = 0;
+    int spf_m = spf[m];
+    while (m % spf_m == 0) {
+      cnt++;
+      m /= spf_m;
+    }
+    primeFactorisation.pb({spf_m, cnt});
+  }
+  itr(primeFactorisation) { cout << it.first << " " << it.second << endl; }
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

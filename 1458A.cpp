@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 // Defines
 #define db double
 #define all(x) (x).begin(), (x).end()
@@ -58,21 +57,28 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, m;
+  cin >> n >> m;
+  vll a(n);
+  vll b(m);
+  rep(i, 0, n) cin >> a[i];
+  rep(i, 0, m) cin >> b[i];
+  ll pre = 0;
+  rep(i, 1, n) pre = gcd(pre, a[i] - a[0]);
+  rep(i, 0, m) {
+    ll ans;
+    ans = gcd(pre, a[0] + b[i]);
+    cout << abs(ans) << " ";
+  }
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-13
 Problem: Problem Name/URL
 */

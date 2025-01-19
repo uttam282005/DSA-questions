@@ -66,13 +66,51 @@ int main() {
   return 0;
 }
 
+const ll N = 10000001;
+
+int isPrime[N];
+int isType[N];
+int prefix[N];
+
+void isValid(int n) {
+  for (int i = 0; i * i < N; i++) {
+    for (int j = 0; i * i + j * j * j * j < N; j++) {
+      isType[i * i + j * j * j * j] = 1;
+    }
+  }
+}
+
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  memset(isPrime, 1, sizeof(isPrime));
+  int ans = 0;
+
+  isPrime[0] = 0;
+  isPrime[1] = 0;
+
+  rep(i, 2, N) {
+    if (isPrime[i]) {
+      for (int j = 2 * i; j < N; j += i)
+        isPrime[j] = 0;
+    }
+  }
+
+  for (int i = 0; i * i < N; i++) {
+    for (int j = 0; (i * i) + (j * j * j * j) < N; j++) {
+      isType[(i * i) + (j * j * j * j)] = 1;
+    }
+  }
+
+  for (int i = 0; i < N; i++)
+    prefix[i] = (isPrime[i] && isType[i] ? 1 : 0);
+  for (int i = 1; i < N; i++)
+    prefix[i] += prefix[i - 1];
+  cout << prefix[n] << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-15
 Problem: Problem Name/URL
 */

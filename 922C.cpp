@@ -67,12 +67,12 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  ll n, k;
+  cin >> n >> k;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-19
 Problem: Problem Name/URL
 */

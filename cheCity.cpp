@@ -58,21 +58,29 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, k;
+  cin >> n >> k;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  int j = 0;
+  ll cnt = 0;
+  rep(i, 0, n) {
+    cnt += j;
+    while (j < i && v[i] - v[j] > k) {
+      cnt++;
+      j++;
+    }
+  }
+  cout << cnt << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-05
 Problem: Problem Name/URL
 */

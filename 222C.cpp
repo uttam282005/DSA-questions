@@ -58,21 +58,88 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
+}
+const int N = 1e7 + 1;
+int spf[N];
+vector<bool> isPrime(N, 1);
+
+void sieve() {
+  for (int i = 2; i < N; i++) {
+    if (isPrime[i]) {
+      spf[i] = i;
+      for (ll j = i * 1ll * i; j < N; j += i) {
+        spf[j] = min(spf[j], i);
+      }
+    }
+  }
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int a, b;
+  cin >> a >> b;
+  vi n(a);
+  vi d(b);
+  rep(i, 0, a) cin >> n[i];
+  rep(i, 0, a) cin >> d[i];
+  sieve();
+  vi primes(N);
+  set<int> unique_primes;
+  rep(i, 0, a) {
+    while (n[i] != 1) {
+      int pf = spf[n[i]];
+      while (n[i] % pf == 0) {
+        primes[pf]++;
+        n[i] /= pf;
+      }
+      unique_primes.insert(pf);
+    }
+  }
+  rep(i, 0, b) {
+    while (d[i] != 1) {
+      int pf = spf[d[i]];
+      while (d[i] % pf == 0) {
+        primes[pf]--;
+        d[i] /= pf;
+      }
+      unique_primes.insert(pf);
+    }
+  }
+  int number_of_num = 0;
+  int number_of_den = 0;
+  itr(unique_primes) {
+    if (primes[it] > 0)
+      number_of_num++;
+    else if (primes[it] < 0)
+      number_of_den++;
+  }
+  if (number_of_den == 0) {
+    number_of_den += 1;
+    unique_primes.insert(1);
+    primes[1] = -1;
+  }
+
+  if (number_of_num == 0) {
+    number_of_num += 1;
+    unique_primes.insert(1);
+    primes[1] = 1;
+  }
+  cout << number_of_num << " " << number_of_den << endl;
+  itr(unique_primes) {
+    if (primes[it] > 0)
+      cout << pow(it, primes[it]) << " ";
+  }
+
+  cout << endl;
+  itr(unique_primes) {
+    if (primes[it] < 0)
+      cout << pow(it, abs(primes[it])) << " ";
+  }
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-18
 Problem: Problem Name/URL
 */

@@ -67,12 +67,32 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vi index(n + 1, 0);
+  rep(i, 1, n + 1) {
+    string s;
+    cin >> s;
+    rep(j, 0, n) {
+      if (s[j] == '1') {
+        if (i > j + 1) {
+          index[i]++;
+        }
+      } else {
+        if (i < j + 1) {
+          index[i]++;
+        }
+      }
+    }
+  }
+  vi ans(n);
+  rep(i, 1, n + 1) { ans[index[i]] = i; }
+  rep(i, 0, n) cout << ans[i] << " ";
+  cout << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-17
 Problem: Problem Name/URL
 */

@@ -58,21 +58,34 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  ll n, k;
+  cin >> n >> k;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  ll sum = 0;
+  ll ans = 0;
+  int left = 0;
+  rep(i, 0, n) {
+    sum += v[i];
+    while (left < i && sum > k) {
+      sum -= v[left];
+      left++;
+    }
+    if (sum <= k) {
+      ll s = i - left + 1;
+      ans += s * (s + 1) / 2;
+    }
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-01
 Problem: Problem Name/URL
 */

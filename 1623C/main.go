@@ -1,55 +1,43 @@
 package main
 
-import (
-	"fmt"
-	"sort"
-)
+import "fmt"
 
-func checker(operations int, a []int, maxSum int, sum int) bool {
-	if sum-operations <= maxSum {
-		return true
-	}
+func ok(h int, nums []int) bool {
+	c := make([]int, len(nums))
+	copy(c, nums)
 
-	n := len(a)
-	for i := n - 1; i >= max(1, n-operations); i-- {
-		sum -= a[i]
-		operationsLeft := operations - (n - i)
-		tempSum := sum - a[0] + (n-i+1)*(a[0]-operationsLeft)
-		if tempSum <= maxSum {
-			return true
+	for i := len(nums) - 1; i >= 0; i-- {
+		if nums[i] < h {
+			return false
 		}
+		d := min((nums[i]-h)/3, c[i]/3)
+		if i > 1 {
+			nums[i-1] += d
+			nums[i-2] += 2 * d
+		}
+		nums[i] -= 3 * d
 	}
 
-	return false
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return true
 }
 
 func solve() {
-	var n, k int
-	fmt.Scan(&n, &k)
+	var n int
+	fmt.Scan(&n)
 	nums := make([]int, n)
-	sum := 0
 	for i := range n {
 		fmt.Scan(&nums[i])
-		sum += nums[i]
 	}
-	sort.Ints(nums)
-	low := 0
-	high := int(1e14)
+	low := 1
+	high := int(1e9)
 	var mid, ans int
 	for low <= high {
 		mid = (low + high) / 2
-		if checker(mid, nums, k, sum) {
+		if ok(mid, append([]int(nil), nums...)) {
 			ans = mid
-			high = mid - 1
-		} else {
 			low = mid + 1
+		} else {
+			high = mid - 1
 		}
 	}
 	fmt.Println(ans)

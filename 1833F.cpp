@@ -67,12 +67,57 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, m;
+  cin >> n >> m;
+  vi v(n);
+  map<int, int> cnt;
+  rep(i, 0, n) {
+    cin >> v[i];
+    cnt[v[i]]++;
+  }
+  vi unique;
+  sort(all(v));
+  unique.push_back(v[0]);
+  rep(i, 1, n) {
+    if (unique.back() != v[i])
+      unique.push_back(v[i]);
+  }
+  int p = unique.size();
+  ll ans = 0;
+  ll com = 1;
+
+  auto mod_inverse = [](ll a, ll mod) {
+    ll res = 1, exp = mod - 2;
+    while (exp > 0) {
+      if (exp % 2 == 1)
+        res = (res * a) % mod;
+      a = (a * a) % mod;
+      exp /= 2;
+    }
+    return res;
+  };
+  if (m > p) {
+    cout << 0 << endl;
+    return;
+  }
+  rep(i, 0, m) { com = (com * cnt[unique[i]] * 1ll) % MOD; }
+  if (unique[m - 1] - unique[0] < m) {
+    ans += com;
+  }
+  rep(i, m, p) {
+    com = (com * cnt[unique[i]] * 1ll) % MOD;
+    // Replace division with modular inverse
+    com = (com * mod_inverse(cnt[unique[i - m]], MOD)) % MOD;
+    if (unique[i] - unique[i - m + 1] < m) {
+      ans += com % MOD;
+    }
+  }
+
+  cout << ans % MOD << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-09
 Problem: Problem Name/URL
 */

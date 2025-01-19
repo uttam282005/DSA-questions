@@ -58,21 +58,43 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
+}
+bool is_greater(vi s, vi c) {
+  rep(i, 0, 26) {
+    if (s[i] > c[i]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, m;
+  cin >> n >> m;
+  string s, c;
+  cin >> s >> c;
+  vi arr_s(26);
+  vi arr_c(26);
+  ll ans = 0;
+  int l = 0;
+  rep(i, 0, c.size()) { arr_c[c[i] - 'a']++; }
+  rep(i, 0, s.size()) {
+    arr_s[s[i] - 'a']++;
+    while (l <= i && is_greater(arr_s, arr_c)) {
+      arr_s[s[l] - 'a']--;
+      l++;
+    }
+    if (arr_s <= arr_c) {
+      ans += i - l + 1;
+    }
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-12
 Problem: Problem Name/URL
 */

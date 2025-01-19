@@ -67,12 +67,32 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  int c = n;
+  vector<pair<int, int>> primeFactors;
+  for (int i = 2; i * i < n; i++) {
+    int cnt = 0;
+    while (n % i == 0) {
+      cnt++;
+      n /= i;
+    }
+    if (cnt)
+      primeFactors.pb({i, cnt});
+  }
+  if (n > 1)
+    primeFactors.pb({n, 1});
+  ll sum = 1;
+  int s = primeFactors.size();
+  rep(i, 0, s) {
+    sum *= (pow(primeFactors[i].first, primeFactors[i].second + 1) - 1) /
+           (primeFactors[i].first - 1);
+  }
+  cout << sum - c << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

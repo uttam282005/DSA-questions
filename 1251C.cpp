@@ -4,7 +4,7 @@ using namespace std;
 // Defines
 #define db double
 #define all(x) (x).begin(), (x).end()
-#define sz(x) (int)(x).size()
+#define sz(x) (int)(x).length()
 #define rep(i, a, b) for (int i = a; i < b; i++)
 #define itr(container) for (auto &it : container)
 #define ss second
@@ -67,12 +67,45 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  string num;
+  cin >> num;
+  int n = num.length();
+  string even = "";
+  string odd = "";
+  rep(i, 0, n) {
+    if ((num[i] - '0') % 2 == 0)
+      even += num[i];
+    else
+      odd += num[i];
+  }
+
+  int p1 = 0;
+  int p2 = 0;
+  string ans = "";
+
+  while (p1 < even.length() && p2 < odd.length()) {
+    if (even[p1] - '0' < odd[p2] - '0') {
+      ans += even[p1];
+      p1++;
+    } else {
+      ans += odd[p2];
+      p2++;
+    }
+  }
+  while (p1 < even.length()) {
+    ans += even[p1];
+    p1++;
+  }
+
+  while (p2 < odd.length()) {
+    ans += odd[p2];
+    p2++;
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-09
 Problem: Problem Name/URL
 */

@@ -58,21 +58,55 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
+const int N = 200001;
+int spf[N];
+
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  for (int i = 1; i < N; i++)
+    spf[i] = i;
+  for (int i = 2; i < N; i++) {
+    for (int j = 2 * i; j < N; j += i) {
+      if (spf[j] == j)
+        spf[j] = i;
+    }
+  }
+
+  vi v(n), primes[N];
+  rep(i, 0, n) cin >> v[i];
+  rep(i, 0, n) {
+    while (v[i] != 1) {
+      int pf = spf[v[i]];
+      int cnt = 0;
+      while (v[i] % pf == 0) {
+        cnt++;
+        v[i] /= pf;
+      }
+      primes[pf].pb(cnt);
+    }
+  }
+  ll ans = 1;
+  for (int i = 1; i < N; i++) {
+    sort(primes[i].begin(), primes[i].end());
+    if (primes[i].size() < n - 1)
+      continue;
+    else {
+      if (primes[i].size() == n)
+        ans *= pow(i, primes[i][1]);
+      else
+        ans *= pow(i, primes[i][0]);
+    }
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-17
 Problem: Problem Name/URL
 */

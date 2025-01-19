@@ -67,12 +67,35 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  int c = n;
+  vector<pair<int, int>> primeFactors;
+  for (int i = 2; i * i < n; i++) {
+    int cnt = 0;
+    while (n % i == 0) {
+      cnt++;
+      n /= i;
+    }
+    if (cnt)
+      primeFactors.pb({i, cnt});
+  }
+  if (n > 1)
+    primeFactors.pb({n, 1});
+  ll all = 1;
+  ll ans = 1;
+
+  itr(primeFactors) {
+    ll power = all / (it.second + 1);
+    ll sum = it.second * (it.second + 1) / 2;
+    ll total_power = power * sum;
+    ans *= pow(it.first, total_power);
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

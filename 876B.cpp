@@ -58,21 +58,42 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, k, m;
+  cin >> n >> k >> m;
+  vi v(n);
+  vi o(n);
+  map<int, int> cnt;
+  rep(i, 0, n) {
+    cin >> v[i];
+    o[i] = v[i];
+    v[i] %= m;
+    cnt[v[i]]++;
+  }
+
+  int printed = 0;
+  itr(cnt) {
+    if (it.second >= k) {
+      cout << "Yes\n";
+      rep(i, 0, n) {
+        if (v[i] == it.first && printed < k) {
+          cout << o[i] << " ";
+          printed++;
+        }
+      }
+      cout << endl;
+      return;
+    }
+  }
+  cout << "No\n";
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-13
 Problem: Problem Name/URL
 */

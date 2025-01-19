@@ -58,21 +58,36 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int a, b;
+  cin >> a >> b;
+  if (b - a == 0) {
+    cout << "infinity\n";
+    return;
+  }
+  if (b > a) {
+    cout << 0 << endl;
+    return;
+  }
+  int n = abs(b - a);
+  int cnt = 0;
+  for (int i = 1; i * i <= n; i++) {
+    if (n % i == 0) {
+      if (a % i == b)
+        cnt++;
+      if (a % (n / i) == b && (n / i) != i)
+        cnt++;
+    }
+  }
+  cout << cnt << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

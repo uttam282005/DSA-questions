@@ -58,21 +58,44 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  ll n;
+  cin >> n;
+
+  // for (ll i = 2; i * i < N; i++) {
+  //   if (spf[i] == 0) {
+  //     spf[i] = i;
+  //     for (ll j = i * i; j < N; j += i) {
+  //       if (spf[j] == 0)
+  //         spf[j] = i;
+  //     }
+  //   }
+  // }
+
+  ll ans = 0;
+  for (int i = 2; i * i <= n; i++) {
+    int cnt = 0;
+    if (n % i == 0) {
+      while (n % i == 0) {
+        cnt++;
+        n /= i;
+      }
+      int j = 1;
+      while (j * (j + 1) / 2 <= cnt)
+        j++;
+      ans += j - 1;
+    }
+  }
+
+  cout << ans + (n > 1) << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-17
 Problem: Problem Name/URL
 */

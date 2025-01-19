@@ -67,12 +67,35 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vi a(n);
+  vi b(n);
+  rep(i, 0, n) cin >> a[i];
+  rep(i, 0, n) cin >> b[i];
+  vi v(n);
+  rep(i, 0, n) { v[i] = a[i] - b[i]; }
+  sort(all(v));
+  if (v[1] < 0) {
+    cout << "NO\n";
+    return;
+  }
+  if (v[0] >= 0) {
+    cout << "YES\n";
+    return;
+  }
+  int req = abs(v[0]);
+  rep(i, 1, n) {
+    if (v[i] < req) {
+      cout << "NO\n";
+      return;
+    }
+  }
+  cout << "YES\n";
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-12
 Problem: Problem Name/URL
 */

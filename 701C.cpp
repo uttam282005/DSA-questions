@@ -58,21 +58,35 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  string s;
+  cin >> n >> s;
+  set<int> st;
+  rep(i, 0, n) st.insert(s[i]);
+  int types = st.size();
+  int ans = INT_MAX;
+  map<char, int> cnt;
+  int j = 0;
+  rep(i, 0, n) {
+    cnt[s[i]]++;
+    while (j <= i && cnt.size() == types) {
+      ans = min(ans, i - j + 1);
+      cnt[s[j]]--;
+      if (cnt[s[j]] == 0)
+        cnt.erase(s[j]);
+      j++;
+    }
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-03
 Problem: Problem Name/URL
 */

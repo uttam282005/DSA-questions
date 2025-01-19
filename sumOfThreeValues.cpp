@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <numeric>
 using namespace std;
 
 // Defines
@@ -58,21 +59,45 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, s;
+  cin >> n >> s;
+  vi v(n);
+  rep(i, 0, n) { cin >> v[i]; }
+  int l = 0;
+  int r = n - 1;
+  vi index(n);
+  iota(all(index), 0);
+  sort(all(index), [&](int i, int j) { return v[i] < v[j]; });
+  rep(i, 0, n) {
+    ll target = s - v[index[i]];
+    while (l < r) {
+      ll sum = v[index[l]] + v[index[r]];
+      if (index[l] == index[i])
+        l++;
+      else if (index[r] == index[i])
+        r--;
+      else if (sum == target) {
+        cout << index[l] + 1 << " " << index[i] + 1 << " " << index[r] + 1
+             << endl;
+        return;
+      } else if (sum > target)
+        r--;
+      else
+        l++;
+    }
+    l = 0;
+    r = n - 1;
+  }
+  cout << "IMPOSSIBLE\n";
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-01
 Problem: Problem Name/URL
 */

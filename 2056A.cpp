@@ -67,12 +67,33 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, m;
+  cin >> n >> m;
+  int p_t = 0, p_b = 0, p_l = 0, p_r = 0;
+  int ans = n * m * 4;
+  rep(i, 0, n) {
+    int xi = 0, yi = 0;
+    cin >> xi >> yi;
+
+    int n_b = p_b + yi;
+    int n_t = m + n_b;
+    int n_l = p_l + xi;
+    int n_r = n_l + m;
+    int w_o = p_r - n_l;
+    int h_o = p_t - n_b;
+    int m = 2 * (w_o + h_o);
+    if (m >= 0)
+      ans -= m;
+    p_t = n_t;
+    p_b = n_b;
+    p_l = n_l;
+    p_r = n_r;
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-17
 Problem: Problem Name/URL
 */

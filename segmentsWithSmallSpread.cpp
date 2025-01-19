@@ -58,21 +58,35 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  ll n, k;
+  cin >> n >> k;
+  vll v(n);
+  rep(i, 0, n) cin >> v[i];
+  map<ll, int> con;
+  int l = 0;
+  ll ans = 0;
+  rep(i, 0, n) {
+    con[v[i]]++;
+    while (l <= i && abs(con.begin()->first - con.rbegin()->first) > k) {
+      con[v[l]]--;
+      if (con[v[l]] == 0)
+        con.erase(v[l]);
+      l++;
+    }
+    if (abs(con.begin()->first - con.rbegin()->first) <= k) {
+      ans += i - l + 1;
+    }
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-03
 Problem: Problem Name/URL
 */

@@ -58,21 +58,41 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, m;
+  cin >> n >> m;
+  vi a(n);
+  vi b(m);
+  rep(i, 0, n) cin >> a[i];
+  rep(i, 0, m) cin >> b[i];
+  int j = 0;
+  ll ans = 0;
+  int prev = 0;
+  int curr = 0;
+  rep(i, 0, n) {
+    curr = 0;
+    if (i > 0 && a[i] == a[i - 1]) {
+      ans += prev;
+      continue;
+    }
+    while (j < m && b[j] <= a[i]) {
+      if (b[j] == a[i]) {
+        curr++;
+        ans++;
+      }
+      j++;
+    }
+    prev = curr;
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2024-12-31
 Problem: Problem Name/URL
 */

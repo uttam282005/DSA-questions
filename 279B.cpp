@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -14,6 +15,7 @@ using namespace std;
 #define pb push_back
 #define umii unordered_map<int, int>
 #define sortv(arr) sort(arr.begin(), arr.end())
+#define input(arr, n) rep(i, 0, n) cin >> arr[i]
 
 // Typedefs
 typedef long long ll;
@@ -58,21 +60,33 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n, t;
+  cin >> n >> t;
+  vi v(n);
+  input(v, n);
+  ll time = 0;
+  int l = 0;
+  int ans = -1;
+  rep(i, 0, n) {
+    time += v[i];
+    while (l <= i && time > t) {
+      time -= v[l];
+      l++;
+    }
+    if (time <= t) {
+      ans = max(ans, i - l + 1);
+    }
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-04
 Problem: Problem Name/URL
 */

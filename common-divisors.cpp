@@ -58,21 +58,34 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
+const int N = 1e6 + 1;
+vi V(N);
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) {
+    cin >> v[i];
+    V[v[i]]++;
+  }
+  for (int i = N - 1; i >= 1; i--) {
+    int count = 0;
+    for (int j = i; j < N; j += i) {
+      count += V[j];
+    }
+    if (count > 1) {
+      cout << i << endl;
+      return;
+    }
+  }
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-14
 Problem: Problem Name/URL
 */

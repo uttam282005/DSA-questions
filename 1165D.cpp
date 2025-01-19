@@ -67,12 +67,29 @@ int main() {
 }
 
 void solve() {
-  // Solution
-  // Start coding here
+  int n;
+  cin >> n;
+  vll d(n);
+  rep(i, 0, n) { cin >> d[i]; }
+  sort(all(d));
+  ll x = 1ll * d[0] * d[n - 1];
+  vll factors;
+  for (int i = 2; 1ll*i * i <= x; i++) {
+    if (x % i == 0) {
+      factors.pb(i);
+      if (i != x / i)
+        factors.pb(x / i);
+    }
+  }
+  sort(all(factors));
+  if (factors == d)
+    cout << x << endl;
+  else
+    cout << -1 << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2024-12-30
+Date: 2025-01-18
 Problem: Problem Name/URL
 */
