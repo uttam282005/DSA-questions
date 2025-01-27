@@ -62,24 +62,31 @@ int main() {
   return 0;
 }
 
+ll darng(ll n) {
+  if (n == 2)
+    return 1;
+  if (n == 1)
+    return 0;
+  return ((n - 1) % MOD) * ((darng(n - 1) % MOD) + (darng(n - 2))) % MOD;
+}
+ll d(ll n) {
+  if (n == 1)
+    return 0;
+  if (n == 2)
+    return 1;
+  if ((n - 2) % 2 == 0)
+    return (n % MOD) * (d(n - 1) % MOD) + 1;
+  return (n % MOD) * (d(n - 1) % MOD) - 1;
+}
+
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
-  }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
-      cout << "NO\n";
-      return;
-    }
-  }
-  cout << "YES\n";
+  int n;
+  cin >> n;
+  cout << d(n) % MOD << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-01-19
+Date: 2025-01-21
 Problem: Problem Name/URL
 */

@@ -58,22 +58,26 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
-  }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  rep(i, 0, n - 1) {
+    if (v[i] > v[i + 1]) {
       cout << "NO\n";
       return;
     }
+    v[i + 1] -= v[i];
+    v[i] = 0;
   }
   cout << "YES\n";
 }

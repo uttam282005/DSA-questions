@@ -51,6 +51,7 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 
 // Function prototypes
 void solve();
+void solveA();
 
 // Main function
 int main() {
@@ -58,26 +59,59 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solveA();
+  }
   return 0;
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> c(n, vector<int>(m));
+  rep(i, 0, n) {
+    rep(j, 0, m) { cin >> c[i][j]; }
   }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
-      cout << "NO\n";
-      return;
+  rep(i, 0, n) { sort(all(c[i])); }
+  rep(i, 0, n) {
+    rep(j, 1, m) {
+      if (c[i][j] - c[i][j - 1] != n) {
+        cout << -1 << endl;
+        return;
+      }
     }
   }
-  cout << "YES\n";
+  vi ans(n);
+  rep(i, 0, n) { ans[c[i][0]] = i + 1; }
+  itr(ans) cout << it << " ";
+  cout << endl;
 }
+void solveA() {
+  int a1, a2, a4, a5;
+  cin >> a1 >> a2 >> a4 >> a5;
+  vi possible_a3 = {a1 + a2, a4 - a2, a5 - a4};
 
+  int maxFibonacciness = 0;
+
+  for (int a3 : possible_a3) {
+    int count = 0;
+
+    if (a3 == a1 + a2) {
+      count++;
+    }
+    if (a4 == a2 + a3) {
+      count++;
+    }
+    if (a5 == a3 + a4) {
+      count++;
+    }
+
+    maxFibonacciness = max(maxFibonacciness, count);
+  }
+  cout << maxFibonacciness << endl;
+}
 /*
 Author: Uttam Raj
 Date: 2025-01-19

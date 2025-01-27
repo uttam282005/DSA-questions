@@ -58,28 +58,32 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+    solve();
   return 0;
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
+  int n;
+  int m;
+  cin >> n >> m;
+  vector<string> v;
+  rep(i, 0, n) {
+    string s;
+    cin >> s;
+    v.pb(s);
   }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
-      cout << "NO\n";
-      return;
-    }
+  ll ans = 1;
+  rep(j, 0, m) {
+    set<char> st;
+    rep(i, 0, n) { st.insert(v[i][j]); }
+    ans = (ans % MOD) * (st.size() % MOD);
+    ans %= MOD;
   }
-  cout << "YES\n";
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-01-19
+Date: 2025-01-21
 Problem: Problem Name/URL
 */

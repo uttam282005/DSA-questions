@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <vector>
 using namespace std;
 
 // Defines
@@ -63,23 +64,39 @@ int main() {
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
-  }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
-      cout << "NO\n";
-      return;
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> v(n, vector<int>(m));
+  rep(i, 0, n) { rep(j, 0, m) cin >> v[i][j]; }
+  ll ans = 0;
+  rep(i, 0, n) {
+    int cnt_zero = 0;
+    int cnt_one = 0;
+    rep(j, 0, m) {
+      if (v[i][j] == 0)
+        cnt_zero++;
+      else
+        cnt_one++;
     }
+    ans += (1ll * 1 << 1ll * cnt_zero) + (1ll * 1 << 1ll * cnt_one) - 2;
   }
-  cout << "YES\n";
+  rep(j, 0, m) {
+    int cnt_zero = 0;
+    int cnt_one = 0;
+    rep(i, 0, n) {
+      if (v[i][j] == 0)
+        cnt_zero++;
+      else
+        cnt_one++;
+    }
+    ans +=
+        (1ll * 1 << cnt_one) + (1ll * 1 << cnt_zero) - (2 + cnt_one + cnt_zero);
+  }
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-01-19
+Date: 2025-01-20
 Problem: Problem Name/URL
 */

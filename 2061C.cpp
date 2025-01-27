@@ -58,28 +58,29 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
+  int n, m;
+  cin >> n >> m;
+  vi a(n);
+  vi b(m);
+  rep(i, 0, n) cin >> a[i];
+  rep(i, 0, m) cin >> b[i];
+  sort(all(b));
+  for (int i = m - 1; i >= 0; i--) {
+    if (cnt_a[b[i]] != 0)
+      continue;
   }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
-      cout << "NO\n";
-      return;
-    }
-  }
-  cout << "YES\n";
-}
 
-/*
-Author: Uttam Raj
-Date: 2025-01-19
-Problem: Problem Name/URL
-*/
+  /*
+  Author: Uttam Raj
+  Date: 2025-01-20
+  Problem: Problem Name/URL
+  */

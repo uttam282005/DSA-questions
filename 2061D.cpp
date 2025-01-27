@@ -58,19 +58,57 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
+}
+umii isPresent;
+bool check(int a) {
+  if (a == 1 && isPresent[a] <= 0)
+    return false;
+
+  if (isPresent[a] > 0) {
+    isPresent[a]--;
+    return true;
+  }
+
+  bool p = check(a / 2);
+  if (p) {
+    if (a % 2 == 0) {
+      return check(a / 2);
+    } else {
+      return check((a / 2) + 1);
+    }
+  }
+  return false;
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
-    return;
+  int n;
+  int m;
+  cin >> n >> m;
+  vi a(n);
+  vi b(m);
+  rep(i, 0, n) {
+    cin >> a[i];
+    isPresent[a[i]]++;
   }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
+  rep(i, 0, m) cin >> b[i];
+  sort(all(b));
+  for (int i = m - 1; i >= 0; i--) {
+    bool c = check(b[i]);
+    if (!c) {
+      cout << "NO\n";
+      isPresent.clear();
+      return;
+    }
+  }
+
+  itr(isPresent) {
+    if (it.second != 0) {
       cout << "NO\n";
       return;
     }
@@ -80,6 +118,6 @@ void solve() {
 
 /*
 Author: Uttam Raj
-Date: 2025-01-19
+Date: 2025-01-21
 Problem: Problem Name/URL
 */

@@ -58,28 +58,52 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
 }
 
 void solve() {
-  ll n, k;
-  cin >> n >> k;
-  if (k > 43) {
-    cout << "NO\n";
+  // Solution
+  // Start coding here
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) { cin >> v[i]; }
+  sort(all(v));
+  ll sides = -1;
+  rep(i, 0, n - 1) {
+    if (v[i] == v[i + 1])
+      sides = i;
+  }
+  if (sides == -1) {
+    cout << -1 << endl;
     return;
   }
-  rep(i, 1, k + 1) {
-    if ((n + 1) % i != 0) {
-      cout << "NO\n";
+  rep(i, 0, n - 1) {
+    if (i == sides || i == sides + 1)
+      continue;
+    int r = -1;
+    if (i + 1 == sides)
+      r = i + 3;
+    else
+      r = i + 1;
+    if (r > n - 1)
+      continue;
+    ll diff = v[r] - v[i];
+    if (diff < 2 * v[sides]) {
+      cout << v[sides] << " " << v[sides] << " " << v[i] << " " << v[r] << endl;
       return;
     }
   }
-  cout << "YES\n";
+  cout << -1 << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-01-19
+Date: 2025-01-20
 Problem: Problem Name/URL
 */
