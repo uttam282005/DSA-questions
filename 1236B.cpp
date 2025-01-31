@@ -123,7 +123,6 @@ struct Mint {
 };
 
 // Combination namespace for precomputing factorials and inverse factorials
-namespace comb {
 struct Comb {
   int n;
   vector<Mint> _fac, _invfac, _inv;
@@ -164,9 +163,6 @@ struct Comb {
     return fac(n) * invfac(r) * invfac(n - r);
   }
 };
-} // namespace comb
-
-comb::Comb comb;
 
 // Debug Function
 #define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
@@ -193,6 +189,14 @@ vector<ll> prefixSum(const vector<ll> &arr) {
 
 // Function prototypes
 void solve();
+ll binPow(ll a, ll b) {
+  if (b == 0)
+    return 1;
+  ll res = binPow(a, b / 2) % MOD;
+  if (b % 2 == 0)
+    return res * res % MOD;
+  return res * res * (a % MOD);
+}
 
 // Main function
 int main() {
@@ -200,17 +204,16 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  solve();
   return 0;
 }
 
 void solve() {
   int n, m;
   cin >> n >> m;
+  ll for_one = binPow(2, m) - 1;
+  ll ans = binPow(for_one, n);
+  cout << ans % MOD << endl;
 }
 
 /*
