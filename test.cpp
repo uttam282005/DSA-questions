@@ -1,78 +1,85 @@
-#include <bits/stdc++.h>
+#include <climits>
+#include <iostream>
+#include <queue>
+#include <set>
+#include <tuple>
+#include <vector>
+
 using namespace std;
 
-// Defines
-#define db double
-#define all(x) (x).begin(), (x).end()
-#define sz(x) (int)(x).size()
-#define rep(i, a, b) for (int i = a; i < b; i++)
-#define itr(container) for (auto &it : container)
-#define ss second
-#define gcd(a, b) __gcd(a, b)
-#define vs vector<string>
-#define um unordered_map
-#define pb push_back
-#define umii unordered_map<int, int>
-#define sortv(arr) sort(arr.begin(), arr.end())
+void solve() {
+  int a;
+  cin >> a;
+  while (a--) {
+    int b, x, y, c, d;
+    cin >> b >> x >> y >> c;
 
-// Typedefs
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-typedef vector<ll> vll;
-typedef vector<pii> vpii;
+    vector<vector<int>> z(b + 1);
+    for (int i = 0; i < c; ++i) {
+      int d, e;
+      cin >> d >> e;
+      z[d].push_back(e);
+      z[e].push_back(d);
+    }
 
-// Constants
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LLINF = 1e18;
+    cin >> d;
+    vector<vector<int>> w(b + 1);
+    for (int i = 0; i < d; ++i) {
+      int e, f;
+      cin >> e >> f;
+      w[e].push_back(f);
+      w[f].push_back(e);
+    }
 
-// Debug Function
-#define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
+    vector<bool> v(b + 1, false);
+    for (int f = 1; f <= b; ++f) {
+      set<int> s(w[f].begin(), w[f].end());
+      for (int nb : z[f]) {
+        if (s.count(nb)) {
+          v[f] = true;
+          break;
+        }
+      }
+    }
 
-// Sorting Functions
-template <typename T> void sort_vec(vector<T> &v) { sort(v.begin(), v.end()); }
+    const long long INF = LLONG_MAX;
+    vector<vector<long long>> dist(b + 1, vector<long long>(b + 1, INF));
+    dist[x][y] = 0;
 
-template <typename T> void sort_desc(vector<T> &v) {
-  sort(v.begin(), v.end(), greater<T>());
-}
+    priority_queue<tuple<long long, int, int>,
+                   vector<tuple<long long, int, int>>, greater<>>
+        pq;
+    pq.push({0, x, y});
 
-// Debug function definitions
-template <typename Arg1> void _f(const char *name, Arg1 &&arg1) {
-  cout << name << " : " << arg1 << endl;
-}
+    long long ans = -1;
 
-template <typename Arg1, typename... Args>
-void _f(const char *names, Arg1 &&arg1, Args &&...args) {
-  const char *comma = strchr(names + 1, ',');
-  cout.write(names, comma - names) << ":" << arg1 << "|";
-  _f(comma + 1, args...);
-}
+    while (!pq.empty()) {
+      auto [d, g, h] = pq.top();
+      pq.pop();
 
-// Function prototypes
-void solve();
+      if (d != dist[g][h])
+        continue;
+      if (g == h && v[g]) {
+        ans = d;
+        break;
+      }
 
-// Main function
-int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  cout.tie(nullptr);
+      for (int ng : z[g]) {
+        for (int nh : w[h]) {
+          long long nd = d + abs(ng - nh);
+          if (nd < dist[ng][nh]) {
+            dist[ng][nh] = nd;
+            pq.push({nd, ng, nh});
+          }
+        }
+      }
+    }
 
-  int t = 1;
-  cin >> t;
-  while (t--) {
-    solve();
+    cout << ans << endl;
   }
+}
+
+int main() {
+  solve();
   return 0;
 }
-
-void solve() {
-  // Solution
-  // Start coding here
-}
-
-/*
-Author: Uttam Raj
-Date: 2024-12-30
-Problem: Problem Name/URL
-*/
