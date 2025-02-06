@@ -1,0 +1,17 @@
+/tmp/ccSVZxxD.o: in function `calculate_factorial_bulk()':
+1294C.cpp:(.text+0x21e): relocation truncated to fit: R_X86_64_PC32 against symbol `inv_fact' defined in .bss section in /tmp/ccSVZxxD.o
+1294C.cpp:(.text+0x241): relocation truncated to fit: R_X86_64_PC32 against symbol `inv_fact' defined in .bss section in /tmp/ccSVZxxD.o
+1294C.cpp:(.text+0x29b): relocation truncated to fit: R_X86_64_PC32 against symbol `inv_fact' defined in .bss section in /tmp/ccSVZxxD.o
+/tmp/ccSVZxxD.o: in function `nCr(int, int)':
+1294C.cpp:(.text+0x34a): relocation truncated to fit: R_X86_64_PC32 against symbol `inv_fact' defined in .bss section in /tmp/ccSVZxxD.o
+1294C.cpp:(.text+0x36a): relocation truncated to fit: R_X86_64_PC32 against symbol `inv_fact' defined in .bss section in /tmp/ccSVZxxD.o
+/tmp/ccSVZxxD.o: in function `derangements(int)':
+1294C.cpp:(.text+0x46a): relocation truncated to fit: R_X86_64_PC32 against symbol `inv_fact' defined in .bss section in /tmp/ccSVZxxD.o
+/tmp/ccSVZxxD.o: in function `sieve()':
+1294C.cpp:(.text+0x707): relocation truncated to fit: R_X86_64_PC32 against symbol `isPrime' defined in .bss section in /tmp/ccSVZxxD.o
+1294C.cpp:(.text+0x726): relocation truncated to fit: R_X86_64_PC32 against symbol `isPrime' defined in .bss section in /tmp/ccSVZxxD.o
+1294C.cpp:(.text+0x741): relocation truncated to fit: R_X86_64_PC32 against symbol `isSquareOfPrime' defined in .bss section in /tmp/ccSVZxxD.o
+/tmp/ccSVZxxD.o: in function `main':
+1294C.cpp:(.text+0x7da): relocation truncated to fit: R_X86_64_PC32 against symbol `isPrime' defined in .bss section in /tmp/ccSVZxxD.o
+1294C.cpp:(.text+0x7ef): additional relocation overflows omitted from the output
+collect2: error: ld returned 1 exit status
