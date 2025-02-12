@@ -26,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e7 + 1;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -116,7 +116,7 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 }
 
 // Function to calculate prefix sum of an array
-vector<ll> prefixSum(vector<int> arr) {
+vector<ll> prefixSum(const vector<ll> &arr) {
   int n = arr.size();
   vector<ll> psum(n);
   psum[0] = arr[0];
@@ -135,29 +135,46 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  vi time(n);
-  rep(i, 0, n) { cin >> time[i]; }
-  sortv(time);
-  if (n == 1) {
-    cout << 2LL * time[0] << endl;
-    return;
+  ll n, c, d;
+  cin >> n >> c >> d;
+  vll v(n);
+  set<ll> st;
+  rep(i, 0, n) cin >> v[i];
+  sort(all(v));
+  ll min_cost = n * c + d;
+  long long dup = 0;
+
+  for (int i = 0; i < n; i++) {
+    if (st.find(v[i]) == st.end()) {
+      st.insert(v[i]);
+    } else
+      dup++;
+
+    long long cost = dup * c;
+
+    if (v[i] - (i + 1 - dup) > 0) {
+      cost += (v[i] - (i + 1 - dup)) * d;
+    }
+    cost += (n - i - 1) * c;
+
+    min_cost = min(min_cost, cost);
   }
-  vll prefixTime = prefixSum(time);
-  if (prefixTime[n - 2] < time[n - 1]) {
-    cout << prefixTime[n - 1] + time[n - 1] - prefixTime[n - 2] << endl;
-  } else
-    cout << prefixTime[n - 1] << endl;
+  cout << min_cost << endl;
 }
 
+// 1 2 5
+// 1 2 3
 /*
 Author: Uttam Raj
-Date: 2025-02-05
+Date: 2025-02-12
 Problem: Problem Name/URL
 */

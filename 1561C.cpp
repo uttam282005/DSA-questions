@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -26,7 +28,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e7 + 1;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -116,7 +118,7 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 }
 
 // Function to calculate prefix sum of an array
-vector<ll> prefixSum(vector<int> arr) {
+vector<ll> prefixSum(const vector<ll> &arr) {
   int n = arr.size();
   vector<ll> psum(n);
   psum[0] = arr[0];
@@ -135,29 +137,66 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
+}
+
+bool check(ll startPower, vll bi, vi order, vll ki) {
+  itr(order) {
+    if (startPower > bi[it]) {
+      startPower += ki[it];
+    } else
+      return false;
+  }
+  return true;
 }
 
 void solve() {
   int n;
   cin >> n;
-  vi time(n);
-  rep(i, 0, n) { cin >> time[i]; }
-  sortv(time);
-  if (n == 1) {
-    cout << 2LL * time[0] << endl;
-    return;
+  vll bi(n);
+  vll ki(n);
+  rep(i, 0, n) {
+    int k;
+    cin >> k;
+    ll b = LONG_LONG_MIN;
+    vll in(k);
+    rep(i, 0, k) {
+      cin >> in[i];
+      b = max(b, in[i] - i);
+    }
+    bi[i] = b;
+    ki[i] = k;
   }
-  vll prefixTime = prefixSum(time);
-  if (prefixTime[n - 2] < time[n - 1]) {
-    cout << prefixTime[n - 1] + time[n - 1] - prefixTime[n - 2] << endl;
-  } else
-    cout << prefixTime[n - 1] << endl;
+  // itr(ki) debug(it);
+  // itr(bi) debug(it);
+
+  vi order(n);
+  iota(all(order), 0);
+  sort(all(order), [&bi](int i, int j) { return bi[i] < bi[j]; });
+
+  ll l = 1;
+  ll r = 1e9 + 2;
+  ll mid;
+  ll startPower = LONG_LONG_MAX;
+  while (l <= r) {
+    mid = (l + r) / 2;
+    if (check(mid, bi, order, ki)) {
+      startPower = min(startPower, mid);
+      r = mid - 1;
+    } else {
+      l = mid + 1;
+    }
+  }
+  cout << startPower << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-02-05
+Date: 2025-02-08
 Problem: Problem Name/URL
 */

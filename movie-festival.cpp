@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -26,7 +28,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e7 + 1;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -116,7 +118,7 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 }
 
 // Function to calculate prefix sum of an array
-vector<ll> prefixSum(vector<int> arr) {
+vector<ll> prefixSum(const vector<ll> &arr) {
   int n = arr.size();
   vector<ll> psum(n);
   psum[0] = arr[0];
@@ -139,25 +141,31 @@ int main() {
   return 0;
 }
 
+struct movie {
+  int starting;
+  int ending;
+};
+
 void solve() {
-  int n;
-  cin >> n;
-  vi time(n);
-  rep(i, 0, n) { cin >> time[i]; }
-  sortv(time);
-  if (n == 1) {
-    cout << 2LL * time[0] << endl;
-    return;
+  int n, k;
+  cin >> n >> k;
+  vector<movie> movies(n);
+  rep(i, 0, n) { cin >> movies[i].starting >> movies[i].ending; }
+  sort(all(movies), [](movie a, movie b) { return a.ending < b.ending; });
+  itr(movies) debug(it.ending, it.starting);
+  movie last_movie = movies[0];
+  int ans = k;
+  rep(i, k, n) {
+    if (last_movie.ending <= movies[i].starting) {
+      last_movie = movies[i];
+      ans++;
+    }
   }
-  vll prefixTime = prefixSum(time);
-  if (prefixTime[n - 2] < time[n - 1]) {
-    cout << prefixTime[n - 1] + time[n - 1] - prefixTime[n - 2] << endl;
-  } else
-    cout << prefixTime[n - 1] << endl;
+  cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-02-05
+Date: 2025-02-07
 Problem: Problem Name/URL
 */

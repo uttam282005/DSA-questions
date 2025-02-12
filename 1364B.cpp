@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -26,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e7 + 1;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -116,7 +117,7 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 }
 
 // Function to calculate prefix sum of an array
-vector<ll> prefixSum(vector<int> arr) {
+vector<ll> prefixSum(const vector<ll> &arr) {
   int n = arr.size();
   vector<ll> psum(n);
   psum[0] = arr[0];
@@ -135,29 +136,49 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
 }
 
 void solve() {
   int n;
   cin >> n;
-  vi time(n);
-  rep(i, 0, n) { cin >> time[i]; }
-  sortv(time);
-  if (n == 1) {
-    cout << 2LL * time[0] << endl;
-    return;
+  vi v(n);
+
+  rep(i, 0, n) cin >> v[i];
+
+  bool asc = false;
+  bool des = false;
+  vi ans;
+
+  rep(i, 0, n - 1) {
+    if (v[i] <= v[i + 1]) {
+      if (!asc) {
+        ans.pb(v[i]);
+        des = false;
+        asc = true;
+      }
+    } else {
+      if (!des) {
+        ans.pb(v[i]);
+        asc = false;
+        des = true;
+      }
+    }
   }
-  vll prefixTime = prefixSum(time);
-  if (prefixTime[n - 2] < time[n - 1]) {
-    cout << prefixTime[n - 1] + time[n - 1] - prefixTime[n - 2] << endl;
-  } else
-    cout << prefixTime[n - 1] << endl;
+
+  ans.pb(v[n - 1]);
+  cout << ans.size() << endl;
+  itr(ans) cout << it << " ";
+  cout << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-02-05
+Date: 2025-02-08
 Problem: Problem Name/URL
 */

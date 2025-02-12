@@ -26,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e7 + 1;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -116,7 +116,7 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 }
 
 // Function to calculate prefix sum of an array
-vector<ll> prefixSum(vector<int> arr) {
+vector<ll> prefixSum(const vector<ll> &arr) {
   int n = arr.size();
   vector<ll> psum(n);
   psum[0] = arr[0];
@@ -135,29 +135,28 @@ int main() {
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  solve();
+  int t = 1;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
   return 0;
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  vi time(n);
-  rep(i, 0, n) { cin >> time[i]; }
-  sortv(time);
-  if (n == 1) {
-    cout << 2LL * time[0] << endl;
-    return;
-  }
-  vll prefixTime = prefixSum(time);
-  if (prefixTime[n - 2] < time[n - 1]) {
-    cout << prefixTime[n - 1] + time[n - 1] - prefixTime[n - 2] << endl;
-  } else
-    cout << prefixTime[n - 1] << endl;
+  int x;
+  int y;
+  cin >> x >> y;
+  if (x - y < 0 && y - x == 1) {
+    cout << "YES\n";
+  } else if (x - y > 0 && (x - y + 1) % 9 == 0)
+    cout << "YES\n";
+  else
+    cout << "NO\n";
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-02-05
+Date: 2025-02-11
 Problem: Problem Name/URL
 */
