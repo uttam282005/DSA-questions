@@ -145,79 +145,39 @@ int main() {
 }
 
 void solve() {
+
   int n;
   cin >> n;
-  map<int, int> cnt;
-  vi v;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  map<int, int> in_one;
+  int back_of_p = INT_MAX;
+  int back_of_s = INT_MAX;
+  int penalty = 0;
 
   rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
-  }
-
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
+    if (back_of_p <= back_of_s) {
+      if (v[i] <= back_of_p)
+        back_of_p = v[i];
+      else if (v[i] <= back_of_s)
+        back_of_s = v[i];
+      else
+        penalty++, back_of_p = v[i];
+    } else {
+      if (v[i] <= back_of_s)
+        back_of_s = v[i];
+      else if (v[i] <= back_of_p)
+        back_of_p = v[i];
+      else
+        penalty++, back_of_s = v[i];
     }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
   }
 
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  cout << penalty << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-20
 Problem: Problem Name/URL
 */

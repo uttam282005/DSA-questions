@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -147,77 +146,37 @@ int main() {
 void solve() {
   int n;
   cin >> n;
-  map<int, int> cnt;
-  vi v;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  int max_minus = 0;
+  int curr_minus = 0;
+  int l = 0, r = 0;
 
   rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
-  }
-
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
+    rep(j, i, n) {
+      if (v[j] < v[i]) {
+        curr_minus++;
+        if (curr_minus > max_minus) {
+          max_minus = curr_minus;
+          l = i;
+          r = j;
+        }
+      } else if (v[j] > v[i]) {
+        curr_minus--;
+        if (curr_minus > max_minus) {
+          max_minus = curr_minus;
+          l = i;
+          r = j;
+        }
+      }
     }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
+    curr_minus = 0;
   }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  cout << l + 1 << " " << r + 1 << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-25
 Problem: Problem Name/URL
 */

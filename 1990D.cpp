@@ -155,24 +155,7 @@ void solve() {
   int firstops = (v[0] <= 2);
   int left = 1;
 
-  rep(i, 0, n) {
-    if (v[i] == 0)
-      continue;
-    if (v[i] <= 2) {
-      v[i] = 0;
-      ops++;
-      if (left)
-        v[i + 1] = max(0, v[i + 1] - 2), left = 0;
-      else {
-        if (v[i + 1] == 3)
-          v[i + 1] -= 1;
-        if (v[i + 1] > 3)
-          v[i + 1] -= 2;
-        left = 1;
-      }
-    } else
-      ops++, firstops = 0, left = 1;
-  }
+  rep(i, 0, n) {}
 
   cout << ops << endl;
 }

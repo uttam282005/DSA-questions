@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -145,79 +144,29 @@ int main() {
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  map<int, int> cnt;
-  vi v;
+  int n, k;
+  cin >> n >> k;
+  vi v(n + 1);
+  v[0] = INT_MIN;
+  rep(i, 1, n + 1) cin >> v[i];
 
-  rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
+  ll current_count = 0;
+  ll count = 0;
+
+  rep(i, 1, n + 1) {
+    if (v[i - 1] < 2 * v[i]) {
+      current_count++;
+      if (current_count >= k + 1)
+        count++;
+    } else
+      current_count = 1;
   }
 
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
-  }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  cout << count << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-03-06
 Problem: Problem Name/URL
 */

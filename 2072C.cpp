@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -144,80 +143,53 @@ int main() {
   return 0;
 }
 
+vi zero_bits(int n) {
+  vi v;
+  int bits = sizeof(int) * 8; // Assuming 32-bit integer
+  for (int i = 0; i < bits; i++) {
+    if (!(n & (1 << i))) { // Check if the ith bit is 0
+      v.push_back(i);
+    }
+  }
+  return v;
+}
+
 void solve() {
   int n;
-  cin >> n;
-  map<int, int> cnt;
-  vi v;
-
+  int k;
+  cin >> n >> k;
+  vi ubits = zero_bits(k);
+  vi ans;
+  int mask = 0;
+  itr(ubits) mask |= (1 << it);
   rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
+    if ((i & mask) == 0)
+      ans.pb(i);
   }
 
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
+  int ach = 0;
+  itr(ans) ach |= it;
+  if (ach == k) {
+    while (ans.size() < n)
+      ans.pb(0);
+    itr(ans) cout << it << " ";
+    cout << endl;
     return;
   }
+  if (ans.size() < n)
+    ans.pb(k);
+  else
+    ans[ans.size() - 1] = k;
 
-  sort(all(v));
+  while (ans.size() < n)
+    ans.pb(0);
 
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
-  }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  itr(ans) cout << it << " ";
+  cout << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-28
 Problem: Problem Name/URL
 */

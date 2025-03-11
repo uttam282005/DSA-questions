@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -145,79 +144,34 @@ int main() {
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  map<int, int> cnt;
-  vi v;
+  int n, m;
+  cin >> n >> m;
+  map<int, int> hsh;
 
-  rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
+  rep(i, 0, m) {
+    int a, b;
+    cin >> a >> b;
+    if (b > a)
+      swap(a, b);
+    hsh[a] = max(b, hsh[a]);
   }
 
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
+  ll ans = 0;
+  ll repeat = 0;
+  int l = 1;
+  rep(i, 1, n + 1) {
+    if (hsh[i] != 0 and hsh[i] <= i and hsh[i] >= l) {
+      ans += 1LL * (i - l) * (i - l - 1) / 2 - repeat + i - l;
+      repeat = 1LL * (i - hsh[i] - 1) * (i - hsh[i] - 2) / 2 + (i - hsh[i] - 1);
+      l = hsh[i] + 1;
     }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
   }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  ans += 1LL * (n - l + 1) * (n - l) / 2 - repeat + (n - l + 1);
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-25
 Problem: Problem Name/URL
 */

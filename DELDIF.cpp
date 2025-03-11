@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -147,75 +146,22 @@ int main() {
 void solve() {
   int n;
   cin >> n;
+  vi v(n);
   map<int, int> cnt;
-  vi v;
-
-  rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
-  }
-
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
+  rep(i, 0, n) cin >> v[i], cnt[v[i]]++;
+  int ans = 0;
+  itr(cnt) {
+    if (it.first == 0)
       continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
+    else
+      cnt[0] += it.second / 2, it.second %= 2;
   }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  if (cnt[0] > 0)
+    cnt[0] = 1;
+  itr(cnt) ans += it.second;
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
 Date: 2025-02-19

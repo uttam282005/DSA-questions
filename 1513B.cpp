@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,20 +26,34 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1;
+const int N = 2 * 1e5 + 1;
 
 // Factorials and Modular Arithmetic
-int fact[N];
-int inv_fact[N];
+int fact[N + 1];
+int inv_fact[N + 1];
+
+// Debug Function
+#define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
+template <typename Arg1> void _f(const char *name, Arg1 &&arg1) {
+  cout << name << " : " << arg1 << endl;
+}
+template <typename Arg1, typename... Args>
+void _f(const char *names, Arg1 &&arg1, Args &&...args) {
+  const char *comma = strchr(names + 1, ',');
+  cout.write(names, comma - names) << ":" << arg1 << "|";
+  _f(comma + 1, args...);
+}
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
-  if (b == 0)
-    return 1;
-  ll res = binPow(a, b / 2);
-  res = (res * res) % MOD;
-  if (b % 2 == 1)
-    res = (res * (a % MOD)) % MOD;
+  ll res = 1;
+  a %= MOD; // Ensure 'a' is within MOD range
+  while (b > 0) {
+    if (b & 1) // If b is odd, multiply the result by 'a'
+      res = (res * a) % MOD;
+    a = (a * a) % MOD; // Square 'a'
+    b >>= 1;           // Divide 'b' by 2
+  }
   return res;
 }
 
@@ -71,7 +84,10 @@ ll factorialSmall(int n) {
 ll nCr(int n, int r) {
   if (r < 0 || r > n)
     return 0;
-  return 1ll * fact[n] * inv_fact[r] * inv_fact[n - r] % MOD;
+  ll ans = fact[n] % MOD;
+  ans = ((ans % MOD) * (inv_fact[r] % MOD)) % MOD;
+  ans = ((ans % MOD) * (inv_fact[n - r] % MOD)) % MOD;
+  return ans;
 }
 
 // Combination without modular arithmetic
@@ -104,18 +120,6 @@ ll derangements(int n) {
   return D;
 }
 
-// Debug Function
-#define debug(...) _f(#__VA_ARGS__, __VA_ARGS__)
-template <typename Arg1> void _f(const char *name, Arg1 &&arg1) {
-  cout << name << " : " << arg1 << endl;
-}
-template <typename Arg1, typename... Args>
-void _f(const char *names, Arg1 &&arg1, Args &&...args) {
-  const char *comma = strchr(names + 1, ',');
-  cout.write(names, comma - names) << ":" << arg1 << "|";
-  _f(comma + 1, args...);
-}
-
 // Function to calculate prefix sum of an array
 vector<ll> prefixSum(const vector<ll> &arr) {
   int n = arr.size();
@@ -138,6 +142,7 @@ int main() {
 
   int t = 1;
   cin >> t;
+  calculate_factorial_bulk();
   while (t--) {
     solve();
   }
@@ -147,77 +152,25 @@ int main() {
 void solve() {
   int n;
   cin >> n;
-  map<int, int> cnt;
-  vi v;
-
-  rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
-  }
-
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  int min_ele = *min_element(all(v));
+  ll count_min = 0;
+  rep(i, 0, n) count_min += (v[i] == min_ele);
+  bool flag = false;
+  rep(i, 0, n) if ((v[i] & min_ele) != min_ele) flag = true;
+  if (flag) {
+    cout << 0 << endl;
     return;
   }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
-  }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  ll ans = nCr(count_min, 2) * 2;
+  ans = (ans % MOD) * fact[n - 2];
+  ans %= MOD;
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-03-07
 Problem: Problem Name/URL
 */

@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -137,7 +136,6 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -147,77 +145,22 @@ int main() {
 void solve() {
   int n;
   cin >> n;
-  map<int, int> cnt;
-  vi v;
-
-  rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
-  }
-
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
-  }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  /* A = 21, b = 18, c = 25 */
+  int plancks_for_a = (n + 1) / 2;
+  int a_last = n % 2;
+  int b_left = n - plancks_for_a - a_last;
+  int plancks_for_b = (b_left + 2) / 3;
+  int b_last = b_left % 3;
+  int c_left = n;
+  if (b_last == 1)
+    c_left--;
+  int plancks_for_c = (c_left + 1) / 2;
+  ll ans = plancks_for_a + plancks_for_b + plancks_for_c;
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-20
 Problem: Problem Name/URL
 */

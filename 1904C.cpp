@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 #include <climits>
 using namespace std;
@@ -145,79 +146,37 @@ int main() {
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  map<int, int> cnt;
-  vi v;
-
-  rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
-  }
-
-  int x1, x2, y1, y2;
-
-  bool foundy = false;
-
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
+  int n, k;
+  cin >> n >> k;
+  vll v(n);
+  rep(i, 0, n) cin >> v[i];
+  if (k >= 3) {
+    cout << 0 << endl;
     return;
   }
 
   sort(all(v));
 
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
+  ll min_diff = v[0];
+  rep(i, 0, n - 1) min_diff = min(min_diff, v[i + 1] - v[i]);
+  if (k == 1) {
+    cout << min_diff << endl;
     return;
   }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
+  rep(i, 0, n) rep(j, i + 1, n) {
+    ll diff = v[j] - v[i];
+    int lb = lower_bound(all(v), diff) - v.begin();
+    if (lb < n)
+      min_diff = min(min_diff, v[lb] - diff);
+    if (lb > 0)
+      min_diff = min(min_diff, diff - v[lb - 1]);
   }
 
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  cout << min_diff << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-22
 Problem: Problem Name/URL
 */

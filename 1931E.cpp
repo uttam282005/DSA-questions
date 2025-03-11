@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -143,81 +142,47 @@ int main() {
   }
   return 0;
 }
+ll count_zeros(ll n) {
+  ll cnt = 0;
+  while (n % 10 == 0) {
+    n /= 10;
+    cnt++;
+  }
+  return cnt;
+}
+
+ll count_digits(ll n) {
+  ll cnt = 0;
+  while (n)
+    n /= 10, cnt++;
+  return cnt;
+}
 
 void solve() {
-  int n;
-  cin >> n;
-  map<int, int> cnt;
-  vi v;
-
+  int n, m;
+  cin >> n >> m;
+  vi v(n);
+  vi z(n);
+  ll total_digits = 0;
   rep(i, 0, n) {
-    int a;
-    cin >> a;
-    cnt[a]++;
-    if (cnt[a] == 2)
-      v.pb(a);
+    cin >> v[i];
+    z[i] = count_zeros(v[i]);
+    total_digits += count_digits(v[i]);
   }
 
-  int x1, x2, y1, y2;
+  sort(all(z), [](int a, int b) { return a > b; });
 
-  bool foundy = false;
+  for (int i = 0; i < n; i += 2)
+    total_digits -= z[i];
 
-  int m = v.size();
-
-  if (m == 0) {
-    cout << "NO\n" << endl;
-    return;
-  }
-
-  sort(all(v));
-
-  if (m == 1 and cnt[v[m - 1]] < 4) {
-    cout << "NO\n";
-    return;
-  }
-
-  x1 = v[0];
-  cnt[v[0]] -= 2;
-  x2 = v[m - 1];
-  cnt[x2] -= 2;
-
-  int l = 0;
-  int r = m - 1;
-
-  while (l <= r) {
-    if (cnt[v[l]] < 2) {
-      l++;
-      continue;
-    }
-    if (cnt[v[r]] < 2) {
-      r--;
-      continue;
-    }
-
-    if (l == r && cnt[v[l]] < 4) {
-      cout << "NO\n";
-      return;
-    }
-
-    y1 = v[l];
-    y2 = v[r];
-    foundy = true;
-    break;
-  }
-
-  if (!foundy) {
-    cout << "NO\n";
-    return;
-  }
-
-  cout << "YES\n";
-  if (1LL * (y2 - x1) * (x2 - y1) > 1LL * (x2 - x1) * (y2 - y1))
-    swap(x2, y2);
-  cout << x1 << " " << y1 << " " << x2 << " " << y1 << " " << x1 << " " << y2
-       << " " << x2 << " " << y2 << endl;
+  if (total_digits >= m + 1)
+    cout << "Sasha\n";
+  else
+    cout << "Anna\n";
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-02-19
+Date: 2025-02-21
 Problem: Problem Name/URL
 */
