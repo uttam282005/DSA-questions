@@ -280,10 +280,14 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  int n, k;
+  cin >> n >> k;
+
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-16
 Problem: Problem Name/URL
 */

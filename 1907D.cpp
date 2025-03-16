@@ -280,10 +280,46 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+bool check(int k, vpii &seg) {
+  int n = seg.size();
+  int l = -k;
+  int r = k;
+  rep(i, 0, n) {
+    l = max(l, seg[i].first);
+    r = min(seg[i].second, r);
+    if (r < l)
+      return false;
+    l -= k;
+    r += k;
+  }
+  return true;
+}
+
+void solve() {
+  int n;
+  cin >> n;
+  vector<pair<int, int>> seg;
+  rep(i, 0, n) {
+    int l, r;
+    cin >> l >> r;
+    seg.pb({l, r});
+  }
+  int left = 0;
+  int right = 1e9;
+  int ans = 0;
+  while (left <= right) {
+    int mid = (left + right) / 2;
+    if (check(mid, seg))
+      ans = mid, right = mid - 1;
+    else
+      left = mid + 1;
+  }
+
+  cout << ans << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-16
 Problem: Problem Name/URL
 */

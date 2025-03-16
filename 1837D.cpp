@@ -280,10 +280,43 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  int n;
+  string s;
+  cin >> n >> s;
+  vi b(n);
+  b[0] += (s[0] == '(' ? 1 : -1);
+  rep(i, 1, n) b[i] = b[i - 1] + (s[i] == '(' ? 1 : -1);
+  if (b[n - 1] != 0) {
+    cout << -1 << endl;
+    return;
+  }
+  vi ans(n);
+  bool flag1 = false;
+  bool flag2 = false;
+  rep(i, 0, n) {
+    if (b[i] < 0)
+      ans[i] = 1, flag1 = true;
+    else if (b[i] > 0)
+      ans[i] = 2, flag2 = true;
+    else if (b[i] == 0 and b[i - 1] < 0)
+      ans[i] = 1, flag1 = true;
+    else
+      ans[i] = 2, flag2 = true;
+  }
+  if (flag1 && flag2) {
+    cout << 2 << endl;
+    itr(ans) cout << it << " ";
+    cout << endl;
+    return;
+  }
+  cout << 1 << endl;
+  itr(ans) cout << 1 << " ";
+  cout << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-15
 Problem: Problem Name/URL
 */

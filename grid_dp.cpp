@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -26,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -280,10 +281,30 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+vector<vector<int>> dp(N, vi(N, -1));
+int f(int i, int j, int n, int m, vector<vi> &grid) {
+  if (i == n - 1 and j == m - 1)
+    return grid[n - 1][m - 1];
+  if (i > n - 1 || j > m - 1)
+    return INT_MAX;
+  if (dp[i][j] != -1)
+    return dp[i][j];
+  return dp[i][j] =
+             min(f(i + 1, j, n, m, grid), f(i, j + 1, n, m, grid)) + grid[i][j];
+}
+
+void solve() {
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> grid(n, vi(m));
+  rep(i, 0, n) {
+    rep(j, 0, m) { cin >> grid[i][j]; }
+  }
+  debug(f(0, 0, n, m, grid));
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-16
 Problem: Problem Name/URL
 */

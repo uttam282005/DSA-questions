@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -280,10 +281,56 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  int n;
+  cin >> n;
+  string s;
+  cin >> s;
+  int center = 0;
+  int cnt = 0;
+  rep(i, 0, n) if (s[i] == '*') cnt++;
+
+  cnt++;
+  cnt /= 2;
+
+  int sh = 0;
+  rep(i, 0, n) {
+    if (s[i] == '*')
+      sh++;
+    if (sh == cnt) {
+      center = i;
+      break;
+    }
+  }
+
+  int exp = center + 1;
+  int r = exp;
+  ll ans = 0;
+
+  while (r < n) {
+    if (s[r] == '*') {
+      ans += r - exp;
+      exp++;
+    }
+    r++;
+  }
+
+  exp = center - 1;
+  int l = exp;
+
+  while (l >= 0) {
+    if (s[l] == '*') {
+      ans += exp - l;
+      exp--;
+    }
+    l--;
+  }
+
+  cout << ans << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-12
 Problem: Problem Name/URL
 */

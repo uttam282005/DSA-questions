@@ -273,17 +273,46 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  int n, m;
+  cin >> n >> m;
+  map<int, vll> x;
+  map<int, vll> y;
+  vi t(m);
+  rep(i, 0, n) {
+    rep(j, 0, m) {
+      cin >> t[j];
+      y[t[j]].push_back(i);
+      x[t[j]].push_back(j);
+    }
+  }
+  ll ans = 0;
+  itr(x) {
+    sort(all(it.second));
+    int sz = it.second.size();
+    vll x = it.second;
+    rep(i, 0, sz) ans += (2 * i - 2 * (sz - i - 1)) * x[i];
+  }
+
+  itr(y) {
+    sort(all(it.second));
+    int sz = it.second.size();
+    vll y = it.second;
+    rep(i, 0, sz) ans += (2 * i - 2 * (sz - i - 1)) * y[i];
+  }
+
+  ans /= 2;
+  cout << ans << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-13
 Problem: Problem Name/URL
 */

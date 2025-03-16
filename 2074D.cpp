@@ -26,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 2 * 1e5;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -136,48 +136,40 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-int n;
-ll dp[N][2][2];
-vector<int> a;
-vector<int> b;
-
-ll f(int i, int type, int arr) {
-  if (i >= n)
-    return 0;
-  if (dp[i][type][arr] != -1)
-    return dp[i][type][arr];
-
-  if (type == 0)
-    return dp[i][0][0] = max({f(i + 1, 0, 0), f(i + 1, 1, 0), f(i + 1, 1, 1)});
-  else if (type == 1 and arr == 1) {
-    return dp[i][1][1] = max({f(i + 1, 0, 0), f(i + 1, 1, 0)}) + b[i];
-  }
-  return dp[i][1][0] = a[i] + max({f(i + 1, 0, 0), f(i + 1, 1, 1)});
-}
-
 void solve() {
-  cin >> n;
+  int n, m;
+  cin >> n >> m;
+  vi x(n), r(n);
 
-  a.resize(n);
-  b.resize(n);
+  rep(i, 0, n) cin >> x[i];
+  rep(i, 0, n) cin >> r[i];
 
-  memset(dp, -1, sizeof(dp));
+  set<pair<int, int>> st;
 
-  for (int i = 0; i < n; i++)
-    cin >> a[i];
-  for (int i = 0; i < n; i++)
-    cin >> b[i];
+  rep(i, 0, n) {
+    int cx = x[i], radius = r[i];
 
-  cout << max({f(0, 0, 0), f(0, 1, 0), f(0, 1, 1)}) << endl;
+    for (int dx = -radius; dx <= radius; dx++) {
+      for (int dy = -radius; dy <= radius; dy++) {
+        if (dx * dx + dy * dy <= radius * radius) {
+          st.insert({cx + dx, dy});
+        }
+      }
+    }
+  }
+
+  cout << st.size() << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-08
+Date: 2025-03-11
 Problem: Problem Name/URL
 */

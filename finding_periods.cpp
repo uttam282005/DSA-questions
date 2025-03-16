@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <pthread.h>
 using namespace std;
 
 // Defines
@@ -273,17 +274,33 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  string s;
+  cin >> s;
+  Hashing hs = Hashing(s);
+  int n = s.size();
+  vi ans;
+  for (int i = n; i > 0; i--) {
+    int len = n - i;
+    if (len == 0) {
+      ans.pb(i);
+      continue;
+    }
+    if (hs.substringHash(0, len - 1) == hs.substringHash(n - len, n - 1))
+      ans.pb(i);
+  }
+  for (int i = ans.size() - 1; i >= 0; i--)
+    cout << ans[i] << " ";
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-14
 Problem: Problem Name/URL
 */

@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#include <cstdio>
+#include <pthread.h>
 using namespace std;
 
 // Defines
@@ -273,17 +275,49 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+bool repeat(int len, string s, Hashing &hs, int &start) {
+  int n = s.size();
+  map<vector<ll>, int> cnt;
+  bool repeated = false;
+  for (int i = 0; i < n; i++) {
+    vector<ll> hashes = hs.substringHash(i, i + len - 1);
+    cnt[hashes]++;
+    if (cnt[hashes] > 1) {
+      start = i, repeated = true;
+      break;
+    }
+  }
+  return repeated;
+}
+
+void solve() {
+  string s;
+  cin >> s;
+  Hashing hs = Hashing(s);
+  int n = s.size();
+  int left = 1;
+  int right = n;
+  int mid = -1;
+  int ans = -1;
+  int start = -1;
+  while (left <= right) {
+    mid = (left + right) / 2;
+    if (repeat(mid, s, hs, start))
+      ans = mid, left = mid + 1;
+    else
+      right = mid - 1;
+  }
+  cout << (ans == -1 ? "-1" : s.substr(start, ans));
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-12
 Problem: Problem Name/URL
 */

@@ -273,17 +273,30 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  string s, p;
+  cin >> s >> p;
+  Hashing hsp = Hashing(p);
+  Hashing hss = Hashing(s);
+  int n = s.size();
+  int l = p.size();
+  vector<ll> pattern_hash = hsp.substringHash(0, l - 1);
+  int cnt = 0;
+  rep(i, 0, n - l + 1) {
+    if (hss.substringHash(i, i + l - 1) == pattern_hash)
+      cnt++;
+  }
+  cout << cnt << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-13
 Problem: Problem Name/URL
 */

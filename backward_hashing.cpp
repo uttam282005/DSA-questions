@@ -29,8 +29,8 @@ const ll LLINF = 1e18;
 const int N = 1;
 
 // Factorials and Modular Arithmetic
-int fact[N];
-int inv_fact[N];
+int fact[N + 1];
+int inv_fact[N + 1];
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
@@ -218,30 +218,39 @@ struct Hashing {
   vector<ll> hashPrimes = {1000000009, 100000007};
   const ll base = 31;
   vector<vector<ll>> hashValues;
+  vector<vector<ll>> BackWardhashValues;
   vector<vector<ll>> powersOfBase;
   vector<vector<ll>> inversePowersOfBase;
+
   Hashing(string a) {
     primes = sz(hashPrimes);
     hashValues.resize(primes);
+    BackWardhashValues.resize(primes);
     powersOfBase.resize(primes);
     inversePowersOfBase.resize(primes);
     s = a;
     n = s.length();
+
     for (int i = 0; i < sz(hashPrimes); i++) {
       powersOfBase[i].resize(n + 1);
       inversePowersOfBase[i].resize(n + 1);
       powersOfBase[i][0] = 1;
+
       for (int j = 1; j <= n; j++) {
         powersOfBase[i][j] = (base * powersOfBase[i][j - 1]) % hashPrimes[i];
       }
+
       inversePowersOfBase[i][n] = mminvprime(powersOfBase[i][n], hashPrimes[i]);
       for (int j = n - 1; j >= 0; j--) {
         inversePowersOfBase[i][j] =
             mod_mul(inversePowersOfBase[i][j + 1], base, hashPrimes[i]);
       }
     }
+
     for (int i = 0; i < sz(hashPrimes); i++) {
       hashValues[i].resize(n);
+      BackWardhashValues[i].resize(n);
+
       for (int j = 0; j < n; j++) {
         hashValues[i][j] =
             ((s[j] - 'a' + 1LL) * powersOfBase[i][j]) % hashPrimes[i];
@@ -249,8 +258,18 @@ struct Hashing {
             (hashValues[i][j] + (j > 0 ? hashValues[i][j - 1] : 0LL)) %
             hashPrimes[i];
       }
+
+      for (int j = n - 1; j >= 0; j--) {
+        BackWardhashValues[i][j] =
+            ((s[j] - 'a' + 1LL) * powersOfBase[i][n - j - 1]) % hashPrimes[i];
+        BackWardhashValues[i][j] =
+            (BackWardhashValues[i][j] +
+             (j < n - 1 ? BackWardhashValues[i][j + 1] : 0LL)) %
+            hashPrimes[i];
+      }
     }
   }
+
   vector<ll> substringHash(int l, int r) {
     vector<ll> hash(primes);
     for (int i = 0; i < primes; i++) {
@@ -258,6 +277,17 @@ struct Hashing {
       ll val2 = l > 0 ? hashValues[i][l - 1] : 0LL;
       hash[i] = mod_mul(mod_sub(val1, val2, hashPrimes[i]),
                         inversePowersOfBase[i][l], hashPrimes[i]);
+    }
+    return hash;
+  }
+
+  vector<ll> BackWardsubstringHash(int l, int r) {
+    vector<ll> hash(primes);
+    for (int i = 0; i < primes; i++) {
+      ll val1 = BackWardhashValues[i][l];
+      ll val2 = r < n - 1 ? BackWardhashValues[i][r + 1] : 0LL;
+      hash[i] = mod_mul(mod_sub(val1, val2, hashPrimes[i]),
+                        inversePowersOfBase[i][n - r - 1], hashPrimes[i]);
     }
     return hash;
   }
@@ -280,10 +310,26 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  string s;
+  cin >> s;
+  int q;
+  cin >> q;
+  Hashing hs = Hashing(s);
+  rep(i, 0, q) {
+    int l, r;
+    cin >> l >> r;
+    vector<ll> forward_hashes = hs.substringHash(l, r);
+    vector<ll> backward_hashes = hs.BackWardsubstringHash(l, r);
+    if (forward_hashes == backward_hashes)
+      cout << "YES\n";
+    else
+      cout << "NO\n";
+  }
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-12
 Problem: Problem Name/URL
 */

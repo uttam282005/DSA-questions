@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <vector>
 using namespace std;
 
 // Defines
@@ -26,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1;
+const int N = 1e4;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -213,6 +214,7 @@ ll phin(ll n) {
 /*--------------------------------------------------------------------------------------------------------------------------*/
 struct Hashing {
   string s;
+  string is_good;
   int n;
   int primes;
   vector<ll> hashPrimes = {1000000009, 100000007};
@@ -273,17 +275,51 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
+void solve() {
+  string s, is_good;
+  int k;
+  cin >> s >> is_good >> k;
+  int n = s.size();
 
-void solve() { cout << "Hllo"; }
+  vector<ll> bad_chars(n);
+  bad_chars[0] = (is_good[s[0] - 'a'] - '0' == 0 ? 1 : 0);
+  rep(i, 1, n) {
+    bad_chars[i] = bad_chars[i - 1] + (is_good[s[i] - 'a'] - '0' == 0 ? 1 : 0);
+  }
+
+  vector<vector<ll>> unq_good;
+  Hashing hs = Hashing(s);
+
+  rep(i, 0, n) {
+    if (i != 0 && bad_chars[i] - bad_chars[i - 1] <= k)
+      unq_good.pb(hs.substringHash(i, i));
+    rep(j, i + 1, n) {
+      int l = (i == 0 ? 0 : bad_chars[i - 1]);
+      int r = bad_chars[j];
+      if (r - l <= k)
+        unq_good.pb(hs.substringHash(i, j));
+    }
+  }
+  if (bad_chars[0] <= k)
+    unq_good.pb(hs.substringHash(0, 0));
+
+  sort(all(unq_good));
+  ll ans = 0;
+  rep(i, 1, unq_good.size()) {
+    if (unq_good[i] != unq_good[i - 1])
+      ans++;
+  }
+  if (unq_good.size() == 0) cout << 0 << endl; else
+  cout << ans + 1 << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-12
 Problem: Problem Name/URL
 */

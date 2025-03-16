@@ -280,10 +280,10 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-12
 Problem: Problem Name/URL
 */

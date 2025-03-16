@@ -26,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N];
@@ -280,10 +280,23 @@ int main() {
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+vi dp(N);
+int f(int n) {
+  if (n == 1 || n == 2)
+    return 1;
+  if (dp[n])
+    return dp[n];
+  return dp[n] = f(n - 1) + f(n - 2);
+}
+
+void solve() {
+  int n;
+  cin >> n;
+  debug(f(n));
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-16
 Problem: Problem Name/URL
 */

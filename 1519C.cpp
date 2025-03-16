@@ -159,19 +159,22 @@ void solve() {
   itr(skills) sort(all(it.second));
 
   itr(skills) {
-    int sz = it.second.size();
-    rep(i, 1, sz) { it.second[i] += it.second[i - 1]; }
+    int siz = it.second.size();
+    rep(i, 1, siz) { it.second[i] += it.second[i - 1]; }
   }
 
-  rep(k, 1, n + 1) {
-    ll skill = 0;
-    itr(skills) {
-      int sz = it.second.size();
-      skill += (sz % k == 0) ? it.second[sz - 1]
-                             : (it.second[sz - 1] - it.second[sz % k - 1]);
+  vector<ll> ans(n + 1);
+
+  itr(skills) {
+    int siz = it.second.size();
+    rep(i, 0, siz) {
+      ans[i + 1] += (siz % (i + 1) == 0)
+                        ? it.second[siz - 1]
+                        : (it.second[siz - 1] - it.second[siz % (i + 1) - 1]);
     }
-    cout << skill << " ";
   }
+
+  rep(i, 1, ans.size()) cout << ans[i] << " ";
   cout << endl;
 }
 

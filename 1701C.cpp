@@ -143,11 +143,38 @@ int main() {
   return 0;
 }
 
+bool check(int time, vi task_for_worker, int n) {
+  ll req_help = 0;
+  ll avl_help = 0;
+  rep(i, 1, n + 1) {
+    task_for_worker[i] -= time;
+    if (task_for_worker[i] > 0)
+      req_help += task_for_worker[i];
+    else
+      avl_help += abs(task_for_worker[i]) / 2;
+  }
+
+  return avl_help >= req_help;
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
-  vi v(n);
-  rep(i, 0, n) cin >> v[i];
+  vi v(m);
+  rep(i, 0, m) cin >> v[i];
+  int left = 0;
+  int right = 2 * m;
+  int ans = 0;
+  vi task_for_worker(n + 1);
+  rep(i, 0, m) task_for_worker[v[i]]++;
+  while (left <= right) {
+    int mid = (left + right) / 2;
+    if (check(mid, task_for_worker, n))
+      ans = mid, right = mid - 1;
+    else
+      left = mid + 1;
+  }
+  cout << ans << endl;
 }
 
 /*

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <vector>
 using namespace std;
 
 // Defines
@@ -215,50 +216,39 @@ struct Hashing {
   string s;
   int n;
   int primes;
-  vector<ll> hashPrimes = {1000000009, 100000007};
+  ll hashPrimes = 1000000009;
   const ll base = 31;
-  vector<vector<ll>> hashValues;
-  vector<vector<ll>> powersOfBase;
-  vector<vector<ll>> inversePowersOfBase;
+  vector<ll> hashValues;
+  vector<ll> powersOfBase;
+  vector<ll> inversePowersOfBase;
   Hashing(string a) {
-    primes = sz(hashPrimes);
-    hashValues.resize(primes);
-    powersOfBase.resize(primes);
-    inversePowersOfBase.resize(primes);
     s = a;
     n = s.length();
-    for (int i = 0; i < sz(hashPrimes); i++) {
-      powersOfBase[i].resize(n + 1);
-      inversePowersOfBase[i].resize(n + 1);
-      powersOfBase[i][0] = 1;
-      for (int j = 1; j <= n; j++) {
-        powersOfBase[i][j] = (base * powersOfBase[i][j - 1]) % hashPrimes[i];
-      }
-      inversePowersOfBase[i][n] = mminvprime(powersOfBase[i][n], hashPrimes[i]);
-      for (int j = n - 1; j >= 0; j--) {
-        inversePowersOfBase[i][j] =
-            mod_mul(inversePowersOfBase[i][j + 1], base, hashPrimes[i]);
-      }
+    powersOfBase.resize(n + 1);
+    inversePowersOfBase.resize(n + 1);
+    powersOfBase[0] = 1;
+    for (int j = 1; j <= n; j++) {
+      powersOfBase[j] = (base * powersOfBase[j - 1]) % hashPrimes;
     }
-    for (int i = 0; i < sz(hashPrimes); i++) {
-      hashValues[i].resize(n);
-      for (int j = 0; j < n; j++) {
-        hashValues[i][j] =
-            ((s[j] - 'a' + 1LL) * powersOfBase[i][j]) % hashPrimes[i];
-        hashValues[i][j] =
-            (hashValues[i][j] + (j > 0 ? hashValues[i][j - 1] : 0LL)) %
-            hashPrimes[i];
-      }
+    inversePowersOfBase[n] = mminvprime(powersOfBase[n], hashPrimes);
+    for (int j = n - 1; j >= 0; j--) {
+      inversePowersOfBase[j] =
+          mod_mul(inversePowersOfBase[j + 1], base, hashPrimes);
+    }
+    hashValues.resize(n);
+    for (int j = 0; j < n; j++) {
+      hashValues[j] = ((s[j] - 'a' + 1LL) * powersOfBase[j]) % hashPrimes;
+      hashValues[j] =
+          (hashValues[j] + (j > 0 ? hashValues[j - 1] : 0LL)) % hashPrimes;
     }
   }
-  vector<ll> substringHash(int l, int r) {
-    vector<ll> hash(primes);
-    for (int i = 0; i < primes; i++) {
-      ll val1 = hashValues[i][r];
-      ll val2 = l > 0 ? hashValues[i][l - 1] : 0LL;
-      hash[i] = mod_mul(mod_sub(val1, val2, hashPrimes[i]),
-                        inversePowersOfBase[i][l], hashPrimes[i]);
-    }
+
+  ll substringHash(int l, int r) {
+    ll hash;
+    ll val1 = hashValues[r];
+    ll val2 = l > 0 ? hashValues[l - 1] : 0LL;
+    hash = mod_mul(mod_sub(val1, val2, hashPrimes), inversePowersOfBase[l],
+                   hashPrimes);
     return hash;
   }
 };
@@ -273,17 +263,54 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+ll rotated_prefix_hash(int shift, int ind, Hashing &hs, int n) {
+  int l = shift;
+  int r = ind + shift;
+  if (r > n - 1) {
+    return (hs.substringHash(l, n - 1) +
+            hs.powersOfBase[n - l] * hs.substringHash(0, r % n));
+  }
+  return hs.substringHash(l, r);
+}
+
+bool is_equal(int shift, string &s, int ind, Hashing &hs, int best) {
+  int n = s.size();
+  return rotated_prefix_hash(best, ind, hs, n) ==
+         rotated_prefix_hash(shift, ind, hs, n);
+}
+
+void solve() {
+  string s;
+  cin >> s;
+  int n = s.size();
+  int best = 0;
+  Hashing hs = Hashing(s);
+  rep(i, 1, n) {
+    int left = 0;
+    int right = n - 1;
+    int diff = n - 1;
+    while (left <= right) {
+      int mid = (left + right) / 2;
+      if (is_equal(i, s, mid, hs, best))
+        left = mid + 1;
+      else
+        diff = mid, right = mid - 1;
+    }
+    if (s[(best + diff) % n] > s[(i + diff) % n]) {
+      best = i;
+    }
+  }
+  cout << s.substr(best, n) + s.substr(0, best) << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-14
 Problem: Problem Name/URL
 */

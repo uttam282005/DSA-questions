@@ -273,17 +273,54 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+bool check(string s, Hashing hs, int ind, vi lengths) {
+  int n = s.size();
+  int len = lengths[ind];
+  vector<ll> prefix_hash = hs.substringHash(0, len - 1);
+  rep(i, 1, n - len) {
+    vector<ll> affix_hash = hs.substringHash(i, i + len - 1);
+    if (affix_hash == prefix_hash)
+      return true;
+  }
+
+  return false;
+}
+
+void solve() {
+  string s;
+  cin >> s;
+  int n = s.size();
+  Hashing hs = Hashing(s);
+
+  vi lengths;
+  rep(i, 0, n) {
+    if (hs.substringHash(0, i) == hs.substringHash(n - i - 1, n - 1))
+      lengths.pb(i + 1);
+  }
+
+  int max_len = 0;
+  int left = 0;
+  int right = lengths.size();
+
+  while (left <= right) {
+    int mid = (left + right) / 2;
+    if (check(s, hs, mid, lengths))
+      max_len = lengths[mid], left = mid + 1;
+    else
+      right = mid - 1;
+  }
+
+  cout << (max_len != 0 ? s.substr(0, max_len) : "Just a legend");
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-13
 Problem: Problem Name/URL
 */

@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -147,25 +146,21 @@ int main() {
 void solve() {
   int n, k;
   cin >> n >> k;
-
   vi v(n);
-  rep(i, 0, n) {
-    cin >> v[i];
-    v[i] = (v[i] % k == 0 ? 0 : k - (v[i] % k));
-  }
-
-  int x = 0;
-  int ans = 0;
-
-  rep(i, 0, n) {
-    if (v[i] == 0 || v[i] < x)
+  map<int, int> cnt;
+  rep(i, 0, n) cin >> v[i], v[i] %= k, cnt[v[i]]++;
+  int max_cnt = 0;
+  int rem = 0;
+  itr(cnt) {
+    if (it.first == 0)
       continue;
-    ans += v[i] - x + 1;
-    x = v[i] + 1;
-    v[i] = -1;
+    if (it.second > max_cnt)
+      rem = it.first, max_cnt = it.second;
   }
-  sort(all(v));
-  cout << ans << endl;
+
+  ll moves = 1LL * (max_cnt - 1) * k + (k - rem);
+
+  cout << ((moves == 0) ? 0 : moves + 1) << endl;
 }
 
 /*

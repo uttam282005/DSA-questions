@@ -273,17 +273,29 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  string s;
+  cin >> s;
+  int n = s.size();
+  Hashing hs = Hashing(s);
+  for (int i = n / 2; i < n - 1; i++) {
+    if (hs.substringHash(0, i) == hs.substringHash(n - i - 1, n - 1)) {
+      cout << "YES\n";
+      cout << s.substr(0, i + 1);
+      return;
+    }
+  }
+  cout << "NO\n";
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-15
 Problem: Problem Name/URL
 */

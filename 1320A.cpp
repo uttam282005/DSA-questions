@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -273,17 +274,25 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-void solve() { cout << "Hllo"; }
+void solve() {
+  int n;
+  cin >> n;
+  vi b(n);
+  map<int, ll> sum;
+  rep(i, 0, n) cin >> b[i], b[i] -= (i + 1), sum[b[i]] += b[i] + i + 1;
+  ll ans = LONG_LONG_MIN;
+  itr(sum) ans = max(ans, it.second);
+  cout << ans << endl;
+}
 
 /*
 Author: Uttam Raj
-Date: 2025-03-11
+Date: 2025-03-14
 Problem: Problem Name/URL
 */
