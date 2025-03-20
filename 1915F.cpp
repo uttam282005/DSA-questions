@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -26,11 +27,11 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
-int fact[N + 1];
-int inv_fact[N + 1];
+int fact[N];
+int inv_fact[N];
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
@@ -273,35 +274,52 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
-
-void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
-      }
-    }
+ll grt(vpii v, int i) {
+  int n = v.size();
+  sort(v.begin() + i + 1, v.end(),
+       [&](pair<int, int> a, pair<int, int> b) { return a.second < b.second; });
+  int l = i + 1;
+  int r = n;
+  int first = -1;
+  while (l <= r) {
+    int mid = (l + r) / 2;
+    if (v[mid].second > v[i].second)
+      first = mid, r = mid - 1;
+    else
+      l = mid + 1;
   }
 
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  if (first == -1)
+    return 0;
+  first++;
+  return n - first + 1;
+}
+void solve() {
+  int n;
+  cin >> n;
+  vpii v;
+  rep(i, 0, n) {
+    int s, d;
+    cin >> s >> d;
+    v.pb({s, d});
+  }
+  ll greetings = 0;
+  sort(all(v),
+       [&](pair<int, int> a, pair<int, int> b) { return a.first > b.first; });
+
+  rep(i, 0, n - 1) { greetings += grt(v, i); }
+
+  cout << greetings << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-03-20
+Date: 2025-03-17
 Problem: Problem Name/URL
 */

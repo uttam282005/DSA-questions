@@ -29,8 +29,8 @@ const ll LLINF = 1e18;
 const int N = 1e5;
 
 // Factorials and Modular Arithmetic
-int fact[N + 1];
-int inv_fact[N + 1];
+int fact[N];
+int inv_fact[N];
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
@@ -280,28 +280,22 @@ int main() {
 }
 
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
-      }
-    }
+  int n, k;
+  cin >> n >> k;
+  map<int, int> cnt;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i], cnt[v[i]]++;
+  ll dp[N + 1];
+  dp[0] = 0;
+  dp[1] = cnt[1];
+  for (int i = 2; i <= N; i++) {
+    dp[i] = max(dp[i - 1], cnt[i] * i + dp[i - 2]);
   }
-
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  cout << dp[N] << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-03-20
+Date: 2025-03-16
 Problem: Problem Name/URL
 */

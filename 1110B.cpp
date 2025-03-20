@@ -26,11 +26,11 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
-int fact[N + 1];
-int inv_fact[N + 1];
+int fact[N];
+int inv_fact[N];
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
@@ -280,28 +280,22 @@ int main() {
 }
 
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
-      }
-    }
-  }
-
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
+  int b, n, k;
+  cin >> b >> n >> k;
+  vi diff;
+  vi v(b);
+  rep(i, 0, b) cin >> v[i];
+  rep(i, 0, b - 1) diff.pb(v[i + 1] - v[i] - 1);
+  sort(all(diff));
+  ll ans = v[b - 1] - v[0] + 1;
+  int d = diff.size();
+  for (int i = d - 1; i > d - k; i--)
+    ans -= diff[i];
   cout << ans << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-03-20
+Date: 2025-03-17
 Problem: Problem Name/URL
 */

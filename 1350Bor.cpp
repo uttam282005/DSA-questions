@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -273,6 +274,7 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
@@ -280,28 +282,28 @@ int main() {
 }
 
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
-      }
+  int n;
+  cin >> n;
+  vll v(n + 1);
+  rep(i, 1, n + 1) cin >> v[i];
+  vll dp(n + 1, 0);
+  dp[n] = 1;
+  for (int i = n - 1; i >= 1; i--) {
+    ll max_next = 0;
+    int j = 2 * i;
+    while (j <= n) {
+      if (v[j] > v[i])
+        max_next = max(max_next, dp[j]);
+      j += i;
     }
+    dp[i] += max_next + 1;
   }
-
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  sort(all(dp));
+  cout << dp[n] << endl;
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-03-20
+Date: 2025-03-18
 Problem: Problem Name/URL
 */

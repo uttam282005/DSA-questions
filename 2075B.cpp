@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -26,11 +27,11 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1;
 
 // Factorials and Modular Arithmetic
-int fact[N + 1];
-int inv_fact[N + 1];
+int fact[N];
+int inv_fact[N];
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
@@ -273,6 +274,7 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
@@ -280,28 +282,31 @@ int main() {
 }
 
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
-      }
-    }
-  }
-
+  int n, k;
+  cin >> n >> k;
+  vll v(n);
+  rep(i, 0, n) cin >> v[i];
+  ll start = v[0];
+  ll end = v[n - 1];
+  sort(all(v));
+  ll max_ele = v[n - 1];
   ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  if (start == max_ele || end == max_ele || k > 1) {
+    int cnt = 0;
+    int i = n - 1;
+    while (cnt < k + 1 and i >= 0)
+      ans += v[i], cnt++, i--;
+    cout << ans << endl;
+    return;
+  }
+  if (k == 1) {
+    cout << max(start, end) + max_ele << endl;
+    return;
+  }
 }
 
 /*
 Author: Uttam Raj
-Date: 2025-03-20
+Date: 2025-03-17
 Problem: Problem Name/URL
 */

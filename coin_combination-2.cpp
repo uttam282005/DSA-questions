@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -26,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1e6;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -279,29 +280,43 @@ int main() {
   return 0;
 }
 
+// state: number of distinct ordered
+// ways of getting x starting from i
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
+  int n, x;
+  cin >> n >> x;
+  vi v(n);
+  unordered_set<int> st;
+  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
+  vi unq;
+  for (int val : st)
+    unq.pb(val);
+  sort(unq.begin(), unq.end(), greater<int>()); // reverse sort
+  int s = unq.size();
+
+  // Use vector instead of variable-sized array
+  vector<vector<ll>> dp(x + 1, vector<ll>(s + 1, 0));
+
+  // Base case
+  for (int i = 0; i <= s; i++)
+    dp[0][i] = 1;
+
+  // DP computation
+  for (int i = 1; i <= x; i++) {
+    dp[i][s] = 0; // Explicitly set the boundary value
+    for (int j = s - 1; j >= 0; j--) {
+      dp[i][j] = dp[i][j + 1]; // Add ways without using coin j
+
+      if (unq[j] <= i) {
+        dp[i][j] = (dp[i][j] + dp[i - unq[j]][j]) % MOD;
       }
     }
   }
 
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  cout << dp[x][0] << endl;
 }
-
 /*
 Author: Uttam Raj
-Date: 2025-03-20
+Date: 2025-03-18
 Problem: Problem Name/URL
 */

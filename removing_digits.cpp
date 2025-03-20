@@ -280,24 +280,20 @@ int main() {
 }
 
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
-      }
+  int n;
+  cin >> n;
+  vector<int> dp(n + 1, INT_MAX);
+  dp[0] = 0;
+  for (int i = 1; i <= n; i++) {
+    int num = i;
+    while (num) {
+      int digit = num % 10;
+      if (digit != 0)
+        dp[i] = min(dp[i], dp[i - digit] + 1);
+      num /= 10;
     }
   }
-
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  cout << dp[n] << endl;
 }
 
 /*

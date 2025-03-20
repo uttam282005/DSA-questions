@@ -280,24 +280,37 @@ int main() {
 }
 
 void solve() {
-  int n, l;
-  cin >> n >> l;
-  // state: number of good sequences of length l starting from i
-  vector<vector<ll>> dp(n + 1, vll(l + 1));
-  for (int i = 0; i <= n; i++)
-    dp[i][1] = 1;
-  for (int i = n; i >= 1; i--) {
-    for (int k = 2; k <= l; k++) {
-      for (int j = i; j <= n; j += i) {
-        dp[i][k] = (dp[i][k] % MOD + dp[j][k - 1] % MOD) % MOD;
+  int n;
+  cin >> n;
+  vector<vector<ll>> dp(n, vector<ll>(n, 0));
+  // dp[i][j] = dp[i + 1][j] + dp[i][j + 1];
+  vector<vector<char>> grid(n, vector<char>(n));
+  rep(i, 0, n) {
+    rep(j, 0, n) { cin >> grid[i][j]; }
+  }
+
+  dp[n - 1][n - 1] = 1;
+  for (int i = n - 1; i >= 0; i--) {
+    for (int j = n - 1; j >= 0; j--) {
+      if (i == n - 1 && j == n - 1)
+        continue;
+      if (grid[i][j] == '*')
+        dp[i][j] = 0;
+      else {
+        if (i + 1 < n)
+          dp[i][j] += dp[i + 1][j] % MOD;
+        if (j + 1 < n)
+          dp[i][j] += dp[i][j + 1] % MOD;
       }
+      dp[i][j] %= MOD;
     }
   }
 
-  ll ans = 0;
-  for (int i = 1; i <= n; i++)
-    ans = (ans % MOD + dp[i][l] % MOD) % MOD;
-  cout << ans << endl;
+  if (grid[n - 1][n - 1] == '*') {
+    cout << 0 << endl;
+    return;
+  }
+  cout << dp[0][0] << endl;
 }
 
 /*
