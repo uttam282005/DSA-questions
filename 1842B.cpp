@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +273,61 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
+bool is_submask(int x, int n) {
+  for (int i = 0; i < 31; i++) {
+    if (!((n >> i) & 1) and (x >> i) & 1) {
+      return false;
+    }
+  }
+  return true;
+}
+
+int give_first_pos(vi &v, int x) {
+  int n = v.size();
+  int pos_a = n;
+  rep(i, 0, n) {
+    if (!(is_submask(v[i], x))) {
+      pos_a = i;
+      break;
+    }
+  }
+  return pos_a;
+}
+
 void solve() {
   int n, x;
   cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
 
-  vll next(x + 1);
+  vi a(n);
+  vi b(n);
+  vi c(n);
 
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
+  rep(i, 0, n) cin >> a[i];
+  rep(i, 0, n) cin >> b[i];
+  rep(i, 0, n) cin >> c[i];
 
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
-  }
+  int pos_a, pos_b, pos_c;
+  pos_a = give_first_pos(a, x);
+  pos_b = give_first_pos(b, x);
+  pos_c = give_first_pos(c, x);
 
-  cout << next[x] << endl;
+  int collective_or = 0;
+  rep(i, 0, pos_a) collective_or |= a[i];
+  rep(i, 0, pos_b) collective_or |= b[i];
+  rep(i, 0, pos_c) collective_or |= c[i];
+
+  cout << (collective_or == x ? "YES\n" : "NO\n");
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-23
 Problem: Problem Name/URL
 */

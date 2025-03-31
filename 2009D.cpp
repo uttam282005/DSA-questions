@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +273,55 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
+  int n;
+  cin >> n;
+  vpii p;
+  map<pii, int> cnt;
+  rep(i, 0, n) {
+    int a, b;
+    cin >> a >> b;
+    p.pb({a, b});
+    cnt[p[i]]++;
+  }
+  sort(all(p));
+  ll ans = 0;
+  rep(i, 0, n - 1) {
+    if (p[i].first == p[i + 1].first)
+      ans += n - 2;
+  }
+  vpii s;
+  s.pb(p[0]);
+  rep(i, 1, n) {
+    if (p[i].first != s.back().first)
+      s.pb(p[i]);
+  }
+  int si = s.size();
+  rep(i, 1, si) {
+    if (s[i - 1].first + 1 == s[i].first and s[i].first == s[i + 1].first - 1) {
+      int f = s[i].first;
+      int p = s[i - 1].first;
+      int n = s[i + 1].first;
+      if (cnt[{f, 0}] and cnt[{p, 1}] and cnt[{n, 1}]) {
+        ans++;
       }
+      if (cnt[{f, 1}] and cnt[{p, 0}] and cnt[{n, 0}])
+        ans++;
     }
-    next = curr;
-    next[0] = 1;
   }
 
-  cout << next[x] << endl;
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-28
 Problem: Problem Name/URL
 */

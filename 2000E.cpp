@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <bits/stdc++.h>
+#include <functional>
 using namespace std;
 
 // Defines
@@ -27,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +274,57 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n, m, k;
+  cin >> n >> m >> k;
+  int w;
+  cin >> w;
+  vi h(w);
+  rep(i, 0, w) cin >> h[i];
+  sort(all(h), greater<int>());
+  vll coff;
+  vector<vector<ll>> grid(n + 1, vll(m + 1, -1));
+  int limit = min(k, m - k + 1);
+  int limit_ver = min(k, n - k + 1);
 
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
+  for (int j = 1; j <= limit; j++) {
+    grid[0][j] = j;
+    grid[0][m - j + 1] = j;
   }
-
-  cout << next[x] << endl;
+  for (int j = limit + 1; j <= m; j++) {
+    if (grid[0][j] == -1)
+      grid[0][j] = limit;
+  }
+  for (int i = 1; i <= limit_ver; i++) {
+    grid[i][0] = i;
+    grid[n - i + 1][0] = i;
+  }
+  for (int i = limit_ver + 1; i <= n; i++) {
+    if (grid[i][0] == -1)
+      grid[i][0] = limit_ver;
+  }
+  for (int i = 1; i <= n; i++) {
+    for (int j = 1; j <= m; j++) {
+      coff.pb(grid[0][j] * grid[i][0]);
+    }
+  }
+  sort(all(coff), greater<int>());
+  ll ans = 0;
+  for (int i = 0; i < w; i++) {
+    ans += coff[i] * h[i];
+  }
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-31
 Problem: Problem Name/URL
 */

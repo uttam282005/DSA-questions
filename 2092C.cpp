@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +273,50 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
+  int n;
+  cin >> n;
   vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
+  ll o_sum = 0;
+  ll e_sum = 0;
+  int max_ele = -1;
+  rep(i, 0, n) {
+    cin >> v[i];
+    max_ele = max(max_ele, v[i]);
+    (v[i] & 1) ? o_sum += v[i] : e_sum += v[i];
   }
 
-  cout << next[x] << endl;
+  sort(all(v));
+
+  if (e_sum == 0 || o_sum == 0) {
+    cout << max_ele << endl;
+    return;
+  }
+
+  (max_ele & 1) ? o_sum -= max_ele : e_sum -= max_ele;
+
+  ll ans = 0;
+  ans += max_ele;
+  rep(i, 0, n - 1) {
+    if (v[i] & 1)
+      ans += v[i] - 1;
+  }
+  ans++;
+  ans += e_sum;
+  ans -= max_ele & 1;
+
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-29
 Problem: Problem Name/URL
 */

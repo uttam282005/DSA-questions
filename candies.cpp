@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -280,42 +279,33 @@ int main() {
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n, k;
+  cin >> n >> k;
+  vi v(n + 1);
+  rep(i, 0, n) cin >> v[i + 1];
 
-  vll next(x + 1);
+  vi prev(k + 1);
+  prev[0] = 1;
 
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
+  prev[v[1]] = 1;
 
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
+  rep(i, 2, n + 1) {
+    vi curr(k + 1);
     curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
+    rep(s, 1, k + 1) {
+      rep(j, 0, v[i] + 1) {
+        if (j <= s)
+          curr[s] = (curr[s] % MOD + prev[s - j] % MOD) % MOD;
       }
     }
-    next = curr;
-    next[0] = 1;
+    prev = curr;
   }
 
-  cout << next[x] << endl;
+  cout << prev[k] << endl;
 }
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-26
 Problem: Problem Name/URL
 */

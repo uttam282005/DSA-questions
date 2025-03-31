@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +273,51 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n, m;
+  cin >> n >> m;
 
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
+  vector<string> v(n);
+  for (int i = 0; i < n; i++) {
+    cin >> v[i];
   }
 
-  cout << next[x] << endl;
+  vector<vector<int>> row_and(n, vector<int>(m));
+  vector<vector<int>> col_and(m, vector<int>(n));
+
+  for (int i = 0; i < n; i++) {
+    row_and[i][0] = v[i][0] - '0';
+    for (int j = 1; j < m; j++) {
+      row_and[i][j] = row_and[i][j - 1] & (v[i][j] - '0');
+    }
+  }
+
+  for (int i = 0; i < m; i++) {
+    col_and[i][0] = v[0][i] - '0';
+    for (int j = 1; j < n; j++) {
+      col_and[i][j] = col_and[i][j - 1] & (v[j][i] - '0');
+    }
+  }
+  rep(i, 0, n) {
+    rep(j, 0, m) {
+      if (v[i][j] - '0' == 1 and !(row_and[i][j] || col_and[j][i])) {
+        cout << "NO\n";
+        return;
+      }
+    }
+  }
+  cout << "YES\n";
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-23
 Problem: Problem Name/URL
 */

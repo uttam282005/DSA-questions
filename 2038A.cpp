@@ -27,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -280,42 +280,52 @@ int main() {
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n, k;
+  cin >> n >> k;
+  vi b(n);
+  vi r(n);
+  vi w(n);
+  rep(i, 0, n) cin >> b[i];
+  rep(i, 0, n) cin >> r[i];
 
-  vll next(x + 1);
+  ll total_work = 0;
+  int max_work = 0;
 
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
+  rep(i, 0, n) {
+    if (b[i] < r[i])
+      continue;
+    max_work = max(max_work, b[i] / r[i]);
+    w[i] = b[i] / r[i];
+    total_work += w[i];
   }
 
-  cout << next[x] << endl;
+  if (total_work < k) {
+    for (int i = 0; i < n; i++)
+      cout << 0 << " ";
+    return;
+  }
+  int extra_work = total_work - k;
+  if (extra_work > 0) {
+    for (int i = 0; i < n; i++) {
+      if (extra_work <= 0)
+        break;
+      if (w[i] >= extra_work) {
+        w[i] -= extra_work;
+        extra_work = 0;
+      } else {
+        extra_work -= w[i];
+        w[i] = 0;
+      }
+    }
+  }
+
+  for (int i = 0; i < n; i++)
+    cout << w[i] << " ";
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-30
 Problem: Problem Name/URL
 */

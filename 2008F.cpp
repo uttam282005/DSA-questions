@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <bits/stdc++.h>
+#include <random>
 using namespace std;
 
 // Defines
@@ -27,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 2e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +274,34 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
+  calculate_factorial_bulk();
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
+  int n;
+  cin >> n;
   vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
+  ll total_sum = 0;
+  rep(i, 0, n) cin >> v[i], total_sum = mod_add(total_sum, v[i], MOD);
+  ll num = 0;
+  ll prefix = 0;
+  rep(i, 0, n - 1) {
+    prefix = mod_add(prefix, v[i], MOD);
+    ll suffix = mod_sub(total_sum, prefix, MOD);
+    num = mod_add(num, mod_mul(v[i], suffix, MOD), MOD);
   }
-
-  cout << next[x] << endl;
+  ll den = mod_mul(n, n - 1, MOD);
+  den = mod_div(den, 2, MOD);
+  cout << mod_div(num, den, MOD) << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-31
 Problem: Problem Name/URL
 */

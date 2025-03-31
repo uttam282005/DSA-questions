@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <bits/stdc++.h>
+#include <cmath>
 using namespace std;
 
 // Defines
@@ -27,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +274,80 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
+int bit_len(int n) {
+  int msb = 0;
+  for (int i = 0; i < 31; i++) {
+    if ((n >> i) & 1)
+      msb = i;
+  }
+  return msb;
+}
+
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n;
+  cin >> n;
+  vi p(n + 1);
+  bool is_odd = n & 1;
+  if (is_odd)
+    n--;
+  bool is_power_of_two = (log2((db)n) == (int)(log2(n)));
 
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
+  if (is_power_of_two) {
+    p[n] = n;
+    p[n - 1] = n - 1;
+    int msb = bit_len(n - 2);
+    p[n - 2] = (1 << msb) - 1;
+    p[n - 3] = n - 2;
+    p[n - 4] = 1 << msb;
+    // n - 4, n - 3;
+    for (int i = 1; i < n - 4; i++) {
+      if (i == p[n - 4])
+        p[i] = n - 4;
+      else if (i == p[n - 2])
+        p[i] = n - 3;
+      else
+        p[i] = i;
     }
-    next = curr;
-    next[0] = 1;
+
+  } else {
+    int msb = bit_len(n);
+    p[n] = (1 << msb) - 1;
+    p[n - 1] = n;
+    p[n - 2] = (1 << msb);
+    // n - 1, n - 2
+    for (int i = 1; i < n - 2; i++) {
+      if (i == p[n])
+        p[i] = n - 1;
+      else if (i == p[n - 2])
+        p[i] = n - 2;
+      else
+        p[i] = i;
+    }
   }
 
-  cout << next[x] << endl;
+  ll k = 0;
+  for (int i = 1; i <= n; i++) {
+    (i & 1) ? k &= p[i] : k |= p[i];
+  }
+  if (is_odd)
+    k &= (n + 1);
+  cout << k << endl;
+  for (int i = 1; i < n + 1; i++)
+    cout << p[i] << " ";
+  if (is_odd)
+    cout << n + 1;
+  cout << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-27
 Problem: Problem Name/URL
 */

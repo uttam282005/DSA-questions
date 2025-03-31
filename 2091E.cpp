@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e7 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -162,7 +161,7 @@ ll combination(ll n, ll r, ll m, ll *fact, ll *ifact) {
   return (((val1 * val2) % m) * val3) % m;
 }
 void google(int t) { cout << "Case #" << t << ": "; }
-vector<ll> sieve(int n) {
+vector<ll> sievea(int n) {
   int *arr = new int[n + 1];
   vector<ll> vect;
   for (int i = 2; i <= n; i++)
@@ -264,58 +263,106 @@ struct Hashing {
   }
 };
 
+const int MAX_N = 1e5 + 1; // Maximum number to check for primality
+
+class PrimeSieve {
+private:
+  std::vector<bool> is_prime;
+  std::vector<int> primes;
+
+public:
+  PrimeSieve() {
+    // Initialize the sieve
+    is_prime.resize(MAX_N, true);
+    is_prime[0] = is_prime[1] = false;
+
+    // Apply Sieve of Eratosthenes
+    for (long long i = 2; i < MAX_N; i++) {
+      if (is_prime[i]) {
+        // Store the prime number
+        primes.push_back(i);
+
+        // Mark multiples as not prime
+        for (long long j = i * i; j < MAX_N; j += i) {
+          is_prime[j] = false;
+        }
+      }
+    }
+  }
+
+  // Check if a number is prime
+  bool isPrime(int n) const {
+    if (n < 0 || n >= MAX_N)
+      return false;
+    return is_prime[n];
+  }
+
+  // Get all prime numbers
+  const std::vector<int> &getPrimes() const { return primes; }
+
+  // Get total count of primes
+  int getPrimeCount() const { return primes.size(); }
+};
 // Function prototypes
 void solve();
 
+bool is_prime[N]; // Array to store prime status
+void sieve() {
+  fill(is_prime, is_prime + N, true); // Assume all numbers are prime initially
+  is_prime[0] = is_prime[1] = false;  // 0 and 1 are not prime
+
+  for (int i = 2; i * i < N; ++i) {
+    if (is_prime[i]) { // If `i` is prime, mark its multiples as non-prime
+      for (int j = i * i; j < N; j += i) {
+        is_prime[j] = false;
+      }
+    }
+  }
+}
 // Main function
+ll num_of_prime[N] = {0};
+void pre() {
+  num_of_prime[0] = 0;
+  num_of_prime[1] = 0;
+  // num_of_prime[1]  =
+  for (int i = 2; i < N; i++) {
+    num_of_prime[i] = num_of_prime[i - 1];
+    if (is_prime[i])
+      num_of_prime[i]++;
+  }
+}
+
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
+
+  sieve();
+  pre();
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
-    }
-    next = curr;
-    next[0] = 1;
+  ll n;
+  cin >> n;
+  ll ans = 0;
+  for (ll a = 1; a <= n; a++) {
+    ll max_b = n - (n % a);
+    ll max_quo = max_b / a;
+    ans += num_of_prime[max_quo];
   }
 
-  cout << next[x] << endl;
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-25
 Problem: Problem Name/URL
 */

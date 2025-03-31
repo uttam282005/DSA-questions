@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -279,43 +278,30 @@ int main() {
   }
   return 0;
 }
-
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n;
+  cin >> n;
+  vi v(n + 1);
+  int max_sum = 0;
+  rep(i, 0, n) cin >> v[i + 1], max_sum += v[i + 1];
 
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
+  vector<int> dp(max_sum + 1, false);
+  // dp[i][j] = sum i ending at j
+  dp[0] = true;
+  for (int i = 1; i <= max_sum; i++) {
+    for (int j = 1; j <= n; j++) {
+      if (v[j] <= i)
+        dp[i] |= dp[i - v[j]];
     }
-    next = curr;
-    next[0] = 1;
   }
-
-  cout << next[x] << endl;
+  ll ans = 0;
+  for (int i = 1; i <= max_sum; i++)
+    ans = (ans % MOD + dp[i] % MOD) % MOD, debug(dp[i], i);
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-24
 Problem: Problem Name/URL
 */

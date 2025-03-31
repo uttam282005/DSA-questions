@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -280,42 +279,41 @@ int main() {
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
+  int n, m;
+  cin >> n >> m;
   vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
+  rep(i, 0, n) cin >> v[i];
+  vector<vector<int>> dp(n, vi(m + 1));
+  if (v[0] == 0)
+    for (int j = 0; j <= m; j++) {
+      dp[0][j] = 1;
     }
-    next = curr;
-    next[0] = 1;
+  else {
+    dp[0][v[0]] = 1;
   }
-
-  cout << next[x] << endl;
+  for (int i = 1; i < n; i++) {
+    if (v[i] != 0) {
+      for (int k : {v[i] - 1, v[i], v[i] + 1})
+        if (k >= 1 and k <= m)
+          dp[i][v[i]] += dp[i - 1][k] % MOD;
+      continue;
+    }
+    for (int j = 1; j <= m; j++) {
+      for (int k : {j - 1, j, j + 1})
+        if (k >= 1 and k <= m)
+          dp[i][j] += dp[i - 1][k] % MOD;
+    }
+  }
+  ll ans = 0;
+  for (int j = 1; j <= m; j++) {
+    ans = (ans % MOD + dp[n - 1][j] % MOD) % MOD;
+  }
+  cout << ans << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-28
 Problem: Problem Name/URL
 */

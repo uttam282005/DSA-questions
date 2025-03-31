@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -280,42 +279,39 @@ int main() {
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
   int n, x;
   cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
 
-  vll next(x + 1);
+  vi cost(n + 1);
+  vi pages(n + 1);
 
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
+  rep(i, 1, n + 1) cin >> cost[i];
+  rep(i, 1, n + 1) cin >> pages[i];
 
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
+  // state: maximum pages we can buy  from first i books
+  // vector<vector<ll>> dp(n + 1, vll(x + 1));
+  vll prev(x + 1, 0);
+
+  // dp[i][x] = max(dp[i - 1][x - ci], dp[i - 1][x])
+
+  for (int i = 1; i <= n; i++) {
+    vector<ll> curr(x + 1);
     for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
+      ll take = 0;
+      if (cost[i] <= j)
+        take = max(pages[i] + prev[j - cost[i]], prev[j]);
+      ll skip = prev[j];
+      curr[j] = max(skip, take);
     }
-    next = curr;
-    next[0] = 1;
+    prev = curr;
   }
 
-  cout << next[x] << endl;
+  cout << prev[x] << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-22
 Problem: Problem Name/URL
 */

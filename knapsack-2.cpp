@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -279,43 +278,35 @@ int main() {
   }
   return 0;
 }
-
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
+  int n, w;
+  cin >> n >> w;
+  vpii v(n + 1);
+  rep(i, 0, n) {
+    int a, b;
+    cin >> a >> b;
+    v[i + 1] = {a, b};
+  }
+  vll prev(w + 1);
+  // dp[i][j] : optimal solution of length i with capacity j
+  // pick = max(dp[i - 1][j], dp[i - 1][j - w[i]])
+  // skip = dp[i - 1][j]
+  for (int i = 1; i <= n; i++) {
+    vll curr(w + 1);
+    for (int j = 1; j <= w; j++) {
+      ll pick = 0;
+      if (v[i].first <= j)
+        pick = max(prev[j], prev[j - v[i].first] + v[i].second);
+      ll skip = prev[j];
+      curr[j] = max(skip, pick);
     }
-    next = curr;
-    next[0] = 1;
+    prev = curr;
   }
 
-  cout << next[x] << endl;
+  cout << prev[w] << endl;
 }
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-21
 Problem: Problem Name/URL
 */

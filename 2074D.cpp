@@ -143,6 +143,13 @@ int main() {
   return 0;
 }
 
+ll find_sqrt(ll n) {
+  ll sqrt = sqrtl(n) + 5;
+  while (sqrt * sqrt > n)
+    sqrt--;
+  return sqrt;
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
@@ -150,22 +157,19 @@ void solve() {
 
   rep(i, 0, n) cin >> x[i];
   rep(i, 0, n) cin >> r[i];
-
-  set<pair<int, int>> st;
+  map<ll, ll> max_y;
 
   rep(i, 0, n) {
     int cx = x[i], radius = r[i];
-
-    for (int dx = -radius; dx <= radius; dx++) {
-      for (int dy = -radius; dy <= radius; dy++) {
-        if (dx * dx + dy * dy <= radius * radius) {
-          st.insert({cx + dx, dy});
-        }
-      }
+    for (ll x = cx - radius; x <= cx + radius; x++) {
+      max_y[x] =
+          max(max_y[x],
+              1ll * 2 * find_sqrt(radius * radius - (x - cx) * (x - cx)) + 1);
     }
   }
-
-  cout << st.size() << endl;
+  ll ans = 0;
+  itr(max_y) ans += it.second;
+  cout << ans << endl;
 }
 
 /*

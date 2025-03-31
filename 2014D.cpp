@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <bits/stdc++.h>
+#include <climits>
+#include <functional>
 using namespace std;
 
 // Defines
@@ -27,7 +29,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +276,59 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
-  vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
+  int n, d, k;
+  cin >> n >> d >> k;
+  vi s(k);
+  vi e(k);
+  rep(i, 0, k) cin >> s[i] >> e[i];
+  sort(all(s));
+  sort(all(e));
 
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
-      }
+  int min_start = 0;
+  int max_start = 0;
+  int max_overlaps = INT_MIN;
+  int min_overlaps = INT_MAX;
+  rep(i, 1, n + 1) {
+    int l = i;
+    int r = (i + d - 1 > n ? n : i + d - 1);
+    if (r - l + 1 < d)
+      continue;
+    auto it = upper_bound(all(s), r);
+    int to_remove = 0;
+    if (it != s.end()) {
+      int ind = it - s.begin();
+      ind++;
+      to_remove += k - ind + 1;
     }
-    next = curr;
-    next[0] = 1;
-  }
+    auto itl = lower_bound(all(e), l);
 
-  cout << next[x] << endl;
+    if (itl != e.end()) {
+      int ind = itl - e.begin();
+      to_remove += ind;
+    } else
+      to_remove += k;
+    int overlaps = k - to_remove;
+    if (overlaps > max_overlaps) {
+      max_overlaps = overlaps;
+      max_start = i;
+    }
+    if (overlaps < min_overlaps) {
+      min_overlaps = overlaps;
+      min_start = i;
+    }
+  }
+  cout << max_start << " " << min_start << endl;
 }
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-29
 Problem: Problem Name/URL
 */

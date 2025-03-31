@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e6;
+const int N = 1e5;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -274,48 +273,51 @@ int main() {
   cout.tie(nullptr);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
   return 0;
 }
 
-// state: number of distinct ordered
-// ways of getting x starting from i
 void solve() {
-  int n, x;
-  cin >> n >> x;
+  int n;
+  cin >> n;
   vi v(n);
-  unordered_set<int> st;
-  rep(i, 0, n) cin >> v[i], st.insert(v[i]);
-  vi unq;
-  for (int val : st)
-    unq.pb(val);
-  int s = unq.size();
-
-  vll next(x + 1);
-
-  // d[i][j] = curr[i]
-  // d[i][j - unq[i]] = curr[j - unq[i]]
-  // d[i + 1][j] = next[j]
-
-  for (int i = s - 1; i >= 0; i--) {
-    vll curr(x + 1);
-    curr[0] = 1;
-    for (int j = 1; j <= x; j++) {
-      curr[j] = (curr[j] % MOD + next[j] % MOD) % MOD;
-      if (unq[i] <= j) {
-        curr[j] = (curr[j] % MOD + curr[j - unq[i]] % MOD) % MOD;
+  rep(i, 0, n) cin >> v[i];
+  ll moves = 0;
+  sort(all(v));
+  int r = n - 1;
+  ll x = 0;
+  int l = 0;
+  while (l <= r) {
+    if (l == r) {
+      if (x >= v[l]) {
+        if (v[l])
+          moves++;
+        break;
       }
+      int diff = v[r] - x;
+      moves += (diff + 1) / 2;
+      if (v[l] and v[l] != 1)
+        moves++;
+      break;
     }
-    next = curr;
-    next[0] = 1;
+    if (x + v[l] >= v[r]) {
+      moves += v[r] - x + 1;
+      v[l] -= (v[r] - x);
+      r--;
+      x = 0;
+    } else {
+      x += v[l], moves += v[l];
+      l++;
+    }
   }
-
-  cout << next[x] << endl;
+  cout << moves << endl;
 }
+
 /*
 Author: Uttam Raj
-Date: 2025-03-18
+Date: 2025-03-25
 Problem: Problem Name/URL
 */
