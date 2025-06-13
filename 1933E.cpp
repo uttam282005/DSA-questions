@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -187,54 +186,48 @@ int main() {
   return 0;
 }
 
+bool check(int mid, int l, int u, vi &prefix, vi &v) {
+  int n = v.size();
+  if (mid == l)
+    return true;
+  int sections_c = prefix[mid - 1] - prefix[l] + v[l];
+  int start = u - sections_c;
+  if (start < (v[mid] + 1) / 2)
+    return false;
+  return true;
+}
+
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  int n;
+  cin >> n;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
+  vi prefix(n);
+  prefix[0] = v[0];
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
+  for (int i = 1; i < n; i++)
+    prefix[i] = prefix[i - 1] + v[i];
 
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  int q;
+  cin >> q;
+
+  for (int i = 0; i < q; i++) {
+    int l, u;
+    cin >> l >> u;
+    l--;
+
+    int left = l;
+    int right = n - 1;
+    int r = l;
+    int mid;
+    while (left <= right) {
+      mid = (left + right) / 2;
+      if (check(mid, l, u, prefix, v))
+        r = mid, left = mid + 1;
+      else
+        right = mid - 1;
+    }
+    cout << r + 1 << " ";
   }
-
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
-  }
-
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
-  }
-
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << endl;
 }

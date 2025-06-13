@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,7 +178,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -187,54 +185,61 @@ int main() {
   return 0;
 }
 
+vector<int> T[N];
+ll subtree_ans[N];
+int child_c[N];
+ll ans[N];
+
+pair<ll, int> subans(int node, int par) {
+  if (T[node].size() == 0)
+    return {0, 1};
+
+  for (int child : T[node]) {
+    if (child == par)
+      continue;
+    auto [subtree, rooted_nodes] = subans(child, node);
+    child_c[node] += rooted_nodes;
+    subtree_ans[node] += subtree + rooted_nodes;
+  }
+
+  child_c[node]++;
+
+  return {subtree_ans[node], child_c[node]};
+}
+
+ll partial_ans(int par, int child) {
+  return ans[par] - subtree_ans[child] - child_c[child];
+}
+
+void calculate_ans(int node, int par, int n) {
+  if (node == 1) {
+    ans[node] = subtree_ans[node];
+  } else {
+    ans[node] = partial_ans(par, node) + subtree_ans[node] + n - child_c[node];
+  }
+
+  for (int child : T[node]) {
+    if (child == par)
+      continue;
+    calculate_ans(child, node, n);
+  }
+}
+
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  int n;
+  cin >> n;
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  for (int i = 1; i < n; i++) {
+    int s, d;
+    cin >> s >> d;
+    T[s].pb(d);
+    T[d].pb(s);
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  subans(1, 0);
+  calculate_ans(1, 0, n);
+
+  for (int i = 1; i <= n; i++) {
+    cout << ans[i] << " ";
   }
-
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
-  }
-
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
 }

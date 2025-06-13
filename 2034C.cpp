@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -172,6 +171,9 @@ vector<ll> sieve(int n) {
   return vect;
 }
 
+const vector<tuple<int, int, char>> dir = {
+    {1, 0, 'U'}, {-1, 0, 'D'}, {0, 1, 'L'}, {0, -1, 'R'}};
+
 void solve();
 
 int main() {
@@ -187,54 +189,85 @@ int main() {
   return 0;
 }
 
+void dfs(int i, int j, char move, vector<string> &map) {
+  int n = map.size();
+  int m = map[0].size();
+
+  if (i < 0 || j < 0 || i >= n || j >= m || map[i][j] == 'E' ||
+      map[i][j] == '?')
+    return;
+
+  if (map[i][j] == move)
+    map[i][j] = 'E';
+  else
+    return;
+
+  for (auto [dx, dy, move] : dir) {
+    int nx = i + dx;
+    int ny = j + dy;
+
+    dfs(nx, ny, move, map);
+  }
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
+  vector<string> map;
 
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  for (int i = 0; i < n; i++) {
+    string lev;
+    cin >> lev;
+    map.pb(lev);
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  // look for left
+  for (int i = 0; i < n; i++) {
+    if (map[i][0] == 'L') {
+      dfs(i, 0, 'L', map);
+    }
+    if (map[i][m - 1] == 'R') {
+      dfs(i, m - 1, 'R', map);
+    }
   }
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
+  for (int j = 0; j < m; j++) {
+    if (map[0][j] == 'U') {
+      dfs(0, j, 'U', map);
+    }
+    if (map[n - 1][j] == 'D') {
+      dfs(n - 1, j, 'D', map);
+    }
   }
 
-  int ans = INT_MAX;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (map[i][j] == '?') {
+        bool all_infected = true;
+        for (auto [dx, dy, move] : dir) {
+          int nx = i + dx;
+          int ny = j + dy;
 
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
+          if (nx < 0 || ny < 0 || nx >= n || ny >= m)
+            continue;
+
+          all_infected &= map[nx][ny] == 'E';
+        }
+
+        if (all_infected)
+          map[i][j] = 'E';
+      }
+    }
   }
 
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
+  int cnt = 0;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (map[i][j] != 'E')
+        cnt++;
+    }
+  }
 
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << cnt << endl;
 }

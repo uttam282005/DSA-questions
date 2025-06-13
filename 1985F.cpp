@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#include <climits>
+#include <locale>
+#include <numeric>
 using namespace std;
 
 // Defines
@@ -27,7 +28,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -187,54 +188,42 @@ int main() {
   return 0;
 }
 
+bool check(ll mid, vi &a, vi &c, int h) {
+  int n = a.size();
+  ll damage = 0;
+  for (int i = 0; i < n; i++) {
+    damage += a[i] * 1LL * ((mid - 1) / c[i] * 1ll);
+    damage += a[i];
+  }
+  return damage >= h;
+}
+
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
+  int h, n;
+  cin >> h >> n;
+  vi a(n), c(n);
   rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  rep(i, 0, n) cin >> c[i];
+  ll turns = 0;
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
+  ll total_damage = accumulate(all(a), 0LL);
 
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
-  }
-
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
-  }
-
-  if (prefix.back() < n) {
-    cout << 0 << endl;
+  if (total_damage >= h) {
+    cout << 1 << endl;
     return;
   }
 
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
+  ll left = 2;
+  ll right = 1e13;
+  ll mid;
+  while (left <= right) {
+    mid = (right - left) / 2 + left;
+    if (check(mid, a, c, h)) {
+      turns = mid;
+      right = mid - 1;
+    } else
+      left = mid + 1;
   }
 
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << turns << endl;
 }

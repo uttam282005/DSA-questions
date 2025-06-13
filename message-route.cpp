@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#include <climits>
+#include <queue>
+#include <vector>
 using namespace std;
 
 // Defines
@@ -27,7 +28,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,7 +180,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -187,54 +187,56 @@ int main() {
   return 0;
 }
 
+vector<int> G[N];
+
+const int MAXN = 1e5 + 5;
 void solve() {
   int n, m;
   cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  for (int i = 0; i < m; i++) {
+    int s, d;
+    cin >> s >> d;
+    G[s].push_back(d);
+    G[d].push_back(s);
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  queue<int> q;
+  vector<int> lev(n + 1, -1);
+  vector<bool> visited(n + 1, false);
+  vector<int> parent(n + 1);
+  q.push(1);
+  visited[1] = true;
+  lev[1] = 1;
+
+  while (!q.empty()) {
+    int top = q.front();
+    q.pop();
+
+    for (int neighbor : G[top]) {
+      if (!visited[neighbor]) {
+        visited[neighbor] = true;
+        lev[neighbor] = lev[top] + 1;
+        parent[neighbor] = top;
+        q.push(neighbor);
+      }
+    }
   }
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
+  if (lev[n] == -1) {
+    cout << "IMPOSSIBLE\n";
     return;
   }
 
-  int ans = INT_MAX;
+  cout << lev[n] << "\n";
 
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
+  vector<int> path;
+
+  int node = n;
+  while (node) {
+    path.pb(node);
+    node = parent[node];
   }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  reverse(all(path));
+  itr(path) cout << it << " ";
 }

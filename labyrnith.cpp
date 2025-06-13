@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1e3 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,7 +178,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -187,54 +185,84 @@ int main() {
   return 0;
 }
 
+const int M = 10001;
+const vector<tuple<int, int, char>> dirs = {
+    {-1, 0, 'U'}, {1, 0, 'D'}, {0, -1, 'L'}, {0, 1, 'R'}};
+
+bool visited[N][M];
+
+pair<int, string> findShortestPath(pair<int, int> start, vector<string> map,
+                                   pair<int, int> end) {
+  int n = map.size();
+  int m = map[0].size();
+
+  vector<vector<bool>> visited(n, vector<bool>(m, false));
+  pair<pair<int, int>, char> parent[n][m];
+
+  queue<pair<pair<int, int>, int>> q;
+  q.push({start, 0});
+  visited[start.first][start.second] = true;
+
+  while (!q.empty()) {
+    auto [node, lev] = q.front();
+    q.pop();
+
+    if (node == end)
+      break;
+
+    for (auto [dx, dy, move] : dirs) {
+      int nx = node.first + dx;
+      int ny = node.second + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] != '#' &&
+          !visited[nx][ny]) {
+        visited[nx][ny] = true;
+        parent[nx][ny] = {node, move};
+        q.push({{nx, ny}, lev + 1});
+      }
+    }
+  }
+
+  if (!visited[end.first][end.second])
+    return {-1, "NO"};
+
+  string pathStr;
+  int i = end.first, j = end.second;
+  while (make_pair(i, j) != start) {
+    auto [pi, pj] = parent[i][j].first;
+    char move = parent[i][j].second;
+    pathStr += move;
+    i = pi;
+    j = pj;
+  }
+  reverse(pathStr.begin(), pathStr.end());
+  return {pathStr.size(), pathStr};
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
-
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  vector<string> map;
+  rep(i, 0, n) {
+    string level;
+    cin >> level;
+    map.pb(level);
   }
-
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  pair<int, int> start, end;
+  rep(i, 0, n) {
+    rep(j, 0, m) {
+      if (map[i][j] == 'A')
+        start = {i, j};
+      if (map[i][j] == 'B')
+        end = {i, j};
+    }
   }
-
-  if (prefix.back() < n) {
-    cout << 0 << endl;
+  pair<int, string> path = findShortestPath(start, map, end);
+  if (path.first == -1) {
+    cout << "NO";
     return;
   }
-
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << "YES" << endl;
+  cout << path.first << endl;
+  cout << path.second << endl;
 }

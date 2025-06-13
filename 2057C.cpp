@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -188,53 +187,22 @@ int main() {
 }
 
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  ll l, r;
+  cin >> l >> r;
+  ll a, b, c;
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  int k = 31;
+  for (int i = 31; i >= 0; i--) {
+    if ((l >> i) != (r >> i)) {
+      k = i;
+      break;
+    }
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
-  }
+  a = l | ((1LL << k) - 1);
+  b = a + 1;
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
-  }
+  c = (a == l) ? r : l;
 
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << a << " " << b << " " << c << endl;
 }

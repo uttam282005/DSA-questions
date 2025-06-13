@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <climits>
+#include <vector>
 using namespace std;
 
 // Defines
@@ -25,9 +25,9 @@ typedef vector<pii> vpii;
 
 // Constants
 const int MOD = 1e9 + 7;
-const int INF = 1e9;
+const ll INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -187,54 +187,53 @@ int main() {
   return 0;
 }
 
+bool check(ll v, ll mid, vll &nodeval, vector<vector<ll>> &T) {
+  if (mid > 2LL * INF)
+    return false;
+  ll req = (v == 1) ? 0 : mid;
+
+  if (mid > nodeval[v]) {
+    req += mid - nodeval[v];
+  }
+
+  for (ll u : T[v]) {
+    if (!check(u, req, nodeval, T))
+      return false;
+  }
+
+  return nodeval[v] >= mid || !T[v].empty();
+}
+
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  int n;
+  cin >> n;
+  vector<ll> nodeval(n + 1);
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  vector<vector<ll>> T(n + 1);
+  for (int i = 0; i < n; i++) {
+    cin >> nodeval[i + 1];
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  for (int i = 2; i <= n; i++) {
+    ll parent;
+    cin >> parent;
+    T[parent].push_back(i);
   }
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
+  ll left = 1;
+  ll right = 2LL * INF;
+  ll ans = 0;
+  ll mid;
+
+  while (left <= right) {
+    mid = (left + right) / 2;
+    if (check(1LL, mid, nodeval, T)) {
+      ans = mid;
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
   }
 
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << ans << endl;
 }

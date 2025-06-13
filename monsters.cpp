@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#include <climits>
+#include <queue>
+#include <vector>
 using namespace std;
 
 // Defines
@@ -27,7 +28,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 1e3 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,7 +180,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -187,54 +187,85 @@ int main() {
   return 0;
 }
 
+vector<vector<bool>> visited(N, vector<bool>(N, false));
+vector<vector<pair<pair<int, int>, char>>>
+    parent(N, vector<pair<pair<int, int>, char>>(N));
+vector<tuple<int, int, char>> directions = {
+    {0, 1, 'R'}, {1, 0, 'D'}, {0, -1, 'L'}, {-1, 0, 'U'}};
+
+bool is_edge(pair<int, int> pos, int n, int m) {
+  int x = pos.first;
+  int y = pos.second;
+  return x == 0 || y == 0 || x == n - 1 || y == m - 1;
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  vector<string> map(n);
+  queue<pair<pair<int, int>, char>> q;
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
+  visited = vector<vector<bool>>(n, vector<bool>(m, false)); // reset visited
 
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  for (int i = 0; i < n; i++) {
+    cin >> map[i];
+    for (int j = 0; j < m; j++) {
+      if (map[i][j] == 'M') {
+        q.push({{i, j}, 'M'});
+        visited[i][j] = true;
+      }
+    }
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  pair<int, int> start;
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (map[i][j] == 'A') {
+        q.push({{i, j}, 'A'});
+        visited[i][j] = true;
+        start = {i, j};
+        break;
+      }
+    }
   }
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
+  while (!q.empty()) {
+    auto top = q.front();
+    q.pop();
+
+    pair<int, int> pos = top.first;
+    char type = top.second;
+
+    if (is_edge(pos, n, m) && type == 'A') {
+      cout << "YES\n";
+      string path = "";
+      int i = pos.first;
+      int j = pos.second;
+      while (make_pair(i, j) != start) {
+        auto par = parent[i][j];
+        i = par.first.first;
+        j = par.first.second;
+        path += par.second;
+      }
+      cout << path.size() << endl;
+      reverse(all(path));
+      cout << path << endl;
+      return;
+    }
+
+    for (auto [dx, dy, move] : directions) {
+      int nx = pos.first + dx;
+      int ny = pos.second + dy;
+      if (nx < 0 || ny < 0 || nx >= n || ny >= m || visited[nx][ny] ||
+          map[nx][ny] == '#')
+        continue;
+
+      q.push({{nx, ny}, type});
+      parent[nx][ny] = {pos, move};
+      visited[nx][ny] = true;
+    }
   }
 
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << "NO\n";
 }

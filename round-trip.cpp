@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,7 +178,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -187,54 +185,69 @@ int main() {
   return 0;
 }
 
+vector<int> G[N];
+bool visited[N];
+
+vector<int> path;
+
+bool dfs(int node, int par) {
+  if (visited[node]) {
+    return true;
+  }
+
+  visited[node] = true;
+
+  for (int child : G[node]) {
+    if (child == par)
+      continue;
+
+    if (dfs(child, node)) {
+      path.pb(child);
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
-
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  rep(i, 0, m) {
+    int s, d;
+    cin >> s >> d;
+    G[s].pb(d);
+    G[d].pb(s);
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  for (int i = 1, j = 0; i < n; i++) {
+    if (!visited[i] and path.empty()) {
+      dfs(i, -1);
+    }
   }
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
+  if (path.size() == 0) {
+    cout << "IMPOSSIBLE\n";
     return;
   }
 
-  int ans = INT_MAX;
+  vector<int> ans;
+  int start = path[0];
+  ans.pb(start);
 
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
+  for (int i = 1; i < path.size(); i++) {
+    ans.pb(path[i]);
+    if (path[i] == start)
+      break;
   }
 
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
+  if (ans.back() != start) {
+    ans.push_back(start);
+  }
 
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << ans.size() << endl;
+
+  for (int node : ans) {
+    cout << node << " ";
+  }
 }

@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <climits>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -187,54 +186,39 @@ int main() {
   return 0;
 }
 
+bool check(int min_mex, vi &v, int k) {
+  int n = v.size();
+  int req_c = min_mex;
+
+  int subarr_c = 0;
+  int allowed = 1;
+  vector<int> cnted(min_mex);
+  for (int i = 0; i < n; i++) {
+    if (v[i] < min_mex and cnted[v[i]] < allowed)
+      req_c--, cnted[v[i]]++;
+    if (req_c == 0)
+      subarr_c++, req_c = min_mex, allowed++;
+  }
+
+  return subarr_c >= k;
+}
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  int n, k;
+  cin >> n >> k;
+  vi v(n);
+  rep(i, 0, n) cin >> v[i];
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
+  int left = 1;
+  int right = n;
+  int mid;
 
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  int ans = 0;
+  while (left <= right) {
+    mid = (left + right) / 2;
+    if (check(mid, v, k))
+      ans = mid, left = mid + 1;
+    else
+      right = mid - 1;
   }
-
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
-  }
-
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
-  }
-
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << ans << endl;
 }

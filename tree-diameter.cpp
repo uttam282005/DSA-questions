@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <climits>
+#include <cstddef>
 using namespace std;
 
 // Defines
@@ -27,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,7 +179,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -187,54 +186,47 @@ int main() {
   return 0;
 }
 
+vi T[N];
+int depth[N];
+
+void dfs(int u, int v = -1) {
+  for (int child : T[u]) {
+    if (child == v)
+      continue;
+    depth[child] = depth[u] + 1;
+    dfs(child, u);
+  }
+}
+
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vi a(n);
-  vi b(m);
-  rep(i, 0, n) cin >> a[i];
-  rep(i, 0, m) cin >> b[i];
+  int n;
+  cin >> n;
 
-  vi prefix(m, INF);
-  vi suffix(m, -INF);
-
-  int i = 0;
-  int j = 0;
-  while (i < n and j < m) {
-    if (a[i] >= b[j]) {
-      prefix[j] = i;
-      i++, j++;
-    } else
-      i++;
+  for (int i = 1; i < n; i++) {
+    int s, d;
+    cin >> s >> d;
+    T[s].pb(d);
+    T[d].pb(s);
   }
 
-  i = n - 1;
-  j = m - 1;
-  while (i >= 0 and j >= 0) {
-    if (a[i] >= b[j]) {
-      suffix[j] = i;
-      j--;
-      i--;
-    } else
-      i--;
+  dfs(1);
+
+  int max_depth = -1;
+  int dia_end = 0;
+  for (int i = 1; i <= n; i++) {
+    if (depth[i] > max_depth) {
+      max_depth = depth[i];
+      dia_end = i;
+    }
+    depth[i] = 0;
   }
 
-  if (prefix.back() < n) {
-    cout << 0 << endl;
-    return;
+  dfs(dia_end);
+
+  max_depth = -1;
+  for (int i = 1; i <= n; i++) {
+    max_depth = max(max_depth, depth[i]);
   }
 
-  int ans = INT_MAX;
-
-  rep(i, 1, m - 1) {
-    if (prefix[i - 1] < suffix[i + 1])
-      ans = min(ans, b[i]);
-  }
-
-  if (suffix[1] != -INF)
-    ans = min(ans, b[0]);
-  if (prefix[m - 2] != INF)
-    ans = min(ans, b[m - 1]);
-
-  cout << (ans == INT_MAX ? -1 : ans) << endl;
+  cout << max_depth << endl;
 }
