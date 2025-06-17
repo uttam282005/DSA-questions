@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5 + 1;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -187,25 +186,29 @@ int main() {
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  vector<string> grid(n);
-  for (int i = 0; i < n; ++i)
-    cin >> grid[i];
+  int q;
+  cin >> q;
+  multiset<int> ends;
+  multiset<int> starts;
 
-  vector<string> dp(n);
-  dp[0] = string(1, grid[0][0]); // Start with the first character
+  while (q--) {
+    char type;
+    int start, end;
+    cin >> type >> start >> end;
 
-  for (int j = 1; j < n; ++j)
-    dp[j] = dp[j - 1] + grid[0][j];
+    if (type == '+') {
+      starts.insert(start);
+      ends.insert(end);
+    } else {
+      starts.erase(starts.find(start));
+      ends.erase(ends.find(end));
+    }
 
-  for (int i = 1; i < n; ++i) {
-    vector<string> new_dp(n);
-    new_dp[0] = dp[0] + grid[i][0]; // First column
-    for (int j = 1; j < n; ++j)
-      new_dp[j] = min(dp[j], new_dp[j - 1]) + grid[i][j];
-    dp = new_dp;
+    if (!starts.empty() && !ends.empty() && *starts.rbegin() <= *ends.begin()) {
+      cout << "NO\n";
+    } else if (starts.empty() and ends.empty()) {
+      cout << "NO\n";
+    } else
+      cout << "YES\n";
   }
-
-  cout << dp[n - 1] << endl;
 }

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <unordered_map>
 #include <vector>
 using namespace std;
 
@@ -25,9 +26,9 @@ typedef vector<pii> vpii;
 
 // Constants
 const int MOD = 1e9 + 7;
-const int INF = 1e9;
+const ll INF = 1e18;
 const ll LLINF = 1e18;
-const int N = 1e5 + 1;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -186,26 +187,55 @@ int main() {
   return 0;
 }
 
+vector<pii> G[N], G_inv[N];
+
+void shortest_path(int src, vector<ll> &dis, vector<pii> G[]) {
+  priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<>> pq;
+  dis[src] = 0;
+  pq.push({0, src});
+
+  while (!pq.empty()) {
+    auto [d, u] = pq.top();
+    pq.pop();
+
+    if (d > dis[u])
+      continue;
+
+    for (auto [v, wt] : G[u]) {
+      if (dis[v] > dis[u] + wt) {
+        dis[v] = dis[u] + wt;
+        pq.push({dis[v], v});
+      }
+    }
+  }
+}
+
 void solve() {
-  int n;
-  cin >> n;
-  vector<string> grid(n);
-  for (int i = 0; i < n; ++i)
-    cin >> grid[i];
+  int n, m;
+  cin >> n >> m;
 
-  vector<string> dp(n);
-  dp[0] = string(1, grid[0][0]); // Start with the first character
-
-  for (int j = 1; j < n; ++j)
-    dp[j] = dp[j - 1] + grid[0][j];
-
-  for (int i = 1; i < n; ++i) {
-    vector<string> new_dp(n);
-    new_dp[0] = dp[0] + grid[i][0]; // First column
-    for (int j = 1; j < n; ++j)
-      new_dp[j] = min(dp[j], new_dp[j - 1]) + grid[i][j];
-    dp = new_dp;
+  vector<int> srcs(m), dest(m), cost(m);
+  for (int i = 0; i < m; i++) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    srcs[i] = a;
+    dest[i] = b;
+    cost[i] = c;
+    G[a].push_back({b, c});
+    G_inv[b].push_back({a, c});
   }
 
-  cout << dp[n - 1] << endl;
+  vector<ll> dis(n + 1, INF), dos(n + 1, INF);
+
+  shortest_path(1, dis, G);
+  shortest_path(n, dos, G_inv);
+
+  ll ans = INF;
+  for (int i = 0; i < m; i++) {
+    if (dis[srcs[i]] < INF && dos[dest[i]] < INF) {
+      ans = min(ans, dis[srcs[i]] + dos[dest[i]] + cost[i] / 2);
+    }
+  }
+
+  cout << ans << '\n';
 }

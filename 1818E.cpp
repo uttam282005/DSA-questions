@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5 + 1;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,6 +178,7 @@ int main() {
   cin.tie(0);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,23 +189,27 @@ int main() {
 void solve() {
   int n;
   cin >> n;
-  vector<string> grid(n);
-  for (int i = 0; i < n; ++i)
-    cin >> grid[i];
-
-  vector<string> dp(n);
-  dp[0] = string(1, grid[0][0]); // Start with the first character
-
-  for (int j = 1; j < n; ++j)
-    dp[j] = dp[j - 1] + grid[0][j];
-
-  for (int i = 1; i < n; ++i) {
-    vector<string> new_dp(n);
-    new_dp[0] = dp[0] + grid[i][0]; // First column
-    for (int j = 1; j < n; ++j)
-      new_dp[j] = min(dp[j], new_dp[j - 1]) + grid[i][j];
-    dp = new_dp;
+  vi v(n);
+  for (int i = 0; i < n; i++) {
+    cin >> v[i];
   }
 
-  cout << dp[n - 1] << endl;
+  vector<vector<int>> dp(n + 1, vector<int>(2, 0));
+  dp[n - 1][1] = INF;
+  dp[n - 1][0] = 1;
+
+  for (int i = n - 2; i >= 0; i--) {
+    dp[i][0] = 1 + min(dp[i + 1][0], dp[i + 1][1]);
+    if (v[i] <= n - i - 1)
+      dp[i][1] = min(dp[i + v[i] + 1][0], dp[i + v[i] + 1][1]);
+    else
+      dp[i][1] = INF;
+  }
+
+  // for (int i = 0; i < n; i++) {
+  //   debug(i);
+  //   cout << dp[i][0] << " " << dp[i][1] << endl;
+  // }
+
+  cout << min(dp[0][0], dp[0][1]) << endl;
 }

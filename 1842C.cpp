@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -27,7 +26,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5 + 1;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -179,6 +178,7 @@ int main() {
   cin.tie(0);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,23 +189,22 @@ int main() {
 void solve() {
   int n;
   cin >> n;
-  vector<string> grid(n);
-  for (int i = 0; i < n; ++i)
-    cin >> grid[i];
+  vi v(n);
+  for (int i = 0; i < n; i++)
+    cin >> v[i];
+  vector<int> dp(n);
+  map<int, int> cd;
 
-  vector<string> dp(n);
-  dp[0] = string(1, grid[0][0]); // Start with the first character
+  dp[n - 1] = 0;
+  cd[v[n - 1]] = n - 1;
 
-  for (int j = 1; j < n; ++j)
-    dp[j] = dp[j - 1] + grid[0][j];
+  for (int i = n - 2; i >= 0; i--) {
+    dp[i] = dp[i + 1];
+    if (cd.count(v[i]))
+      dp[i] = max(dp[i], cd[v[i]] + 1 - i);
 
-  for (int i = 1; i < n; ++i) {
-    vector<string> new_dp(n);
-    new_dp[0] = dp[0] + grid[i][0]; // First column
-    for (int j = 1; j < n; ++j)
-      new_dp[j] = min(dp[j], new_dp[j - 1]) + grid[i][j];
-    dp = new_dp;
+    cd[v[i]] = max(cd[v[i]], dp[i + 1] + i);
   }
 
-  cout << dp[n - 1] << endl;
+  cout << dp[0] << endl;
 }

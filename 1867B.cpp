@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <vector>
+#include <functional>
 using namespace std;
 
 // Defines
@@ -24,10 +24,10 @@ typedef vector<ll> vll;
 typedef vector<pii> vpii;
 
 // Constants
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5 + 1;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -186,26 +186,37 @@ int main() {
   return 0;
 }
 
+ll binpow(ll a, ll b, ll m) {
+  ll res = 1;
+  while (b > 0) {
+    if (b & 1)
+      res = res * a % m;
+    a = a * a % m;
+    b >>= 1;
+  }
+  return res;
+}
+
 void solve() {
   int n;
   cin >> n;
-  vector<string> grid(n);
-  for (int i = 0; i < n; ++i)
-    cin >> grid[i];
+  vll v(n + 1);
+  rep(i, 0, n) cin >> v[i + 1];
 
-  vector<string> dp(n);
-  dp[0] = string(1, grid[0][0]); // Start with the first character
-
-  for (int j = 1; j < n; ++j)
-    dp[j] = dp[j - 1] + grid[0][j];
-
-  for (int i = 1; i < n; ++i) {
-    vector<string> new_dp(n);
-    new_dp[0] = dp[0] + grid[i][0]; // First column
-    for (int j = 1; j < n; ++j)
-      new_dp[j] = min(dp[j], new_dp[j - 1]) + grid[i][j];
-    dp = new_dp;
+  for (int i = n; i >= 1; i--) {
+    for (int j = 2 * i; j <= n; j += i) {
+      v[i] = max(v[i], v[j]);
+    }
   }
 
-  cout << dp[n - 1] << endl;
+  sort(v.begin() + 1, v.end());
+
+  ll ans = 0;
+  int power = 1;
+  for (int i = 1; i <= n; i++) {
+    ans = (ans + power * 1LL * v[i]) % MOD;
+    power = (power * 2) % MOD;
+  }
+
+  cout << ans << endl;
 }

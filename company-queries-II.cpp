@@ -1,5 +1,5 @@
+#include <algorithm>
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -27,7 +27,7 @@ typedef vector<pii> vpii;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LLINF = 1e18;
-const int N = 1e5 + 1;
+const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
@@ -186,26 +186,97 @@ int main() {
   return 0;
 }
 
-void solve() {
-  int n;
-  cin >> n;
-  vector<string> grid(n);
-  for (int i = 0; i < n; ++i)
-    cin >> grid[i];
+vi T[N];
+int lvl[N];
+int up[N][21];
 
-  vector<string> dp(n);
-  dp[0] = string(1, grid[0][0]); // Start with the first character
+void dfs(int src, int par) {
+  lvl[src] = lvl[par] + 1;
 
-  for (int j = 1; j < n; ++j)
-    dp[j] = dp[j - 1] + grid[0][j];
+  for (int child : T[src]) {
+    if (child != par) {
+      dfs(child, src);
+    }
+  }
+}
 
-  for (int i = 1; i < n; ++i) {
-    vector<string> new_dp(n);
-    new_dp[0] = dp[0] + grid[i][0]; // First column
-    for (int j = 1; j < n; ++j)
-      new_dp[j] = min(dp[j], new_dp[j - 1]) + grid[i][j];
-    dp = new_dp;
+void binary_lifting(int src, int par) {
+  up[src][0] = par;
+
+  for (int i = 1; i < 20; i++) {
+    if (up[src][i - 1] != -1) {
+      up[src][i] = up[up[src][i - 1]][i - 1];
+    } else
+      up[src][i] = -1;
   }
 
-  cout << dp[n - 1] << endl;
+  for (int child : T[src]) {
+    if (child != par)
+      binary_lifting(child, src);
+  }
+}
+
+int lift(int src, int k) {
+  for (int i = 19; i >= 0; i--) {
+    if ((k >> i) & 1) {
+      src = up[src][i];
+    }
+  }
+
+  return src;
+}
+
+int find_lca(int a, int b) {
+  if (lvl[a] > lvl[b])
+    swap(a, b);
+
+  b = lift(b, lvl[b] - lvl[a]);
+
+  if (a == b)
+    return a;
+  // int left = 0;
+  // int right = lvl[b];
+
+  // LCA in logn^2
+  // while (left <= right) {
+  //   int mid = (left + right) / 2;
+  //   int node1 = lift(a, mid);
+  //   int node2 = lift(b, mid);
+  //   if (node1 == node2) {
+  //     right = mid - 1;
+  //     li = mid;
+  //   } else {
+  //     left = mid + 1;
+  //   }
+  // }
+  //
+  // return lift(a, li);
+  //
+  // LCA in logn
+  for (int i = 19; i >= 0; i--) {
+    if (up[a][i] != up[b][i]) {
+      a = up[a][i];
+      b = up[b][i];
+    }
+  }
+  return up[a][0];
+}
+
+void solve() {
+  int n, q;
+  cin >> n >> q;
+  for (int i = 2; i <= n; i++) {
+    int p;
+    cin >> p;
+    T[p].push_back(i);
+  }
+
+  dfs(1, 0);
+  binary_lifting(1, -1);
+
+  for (int i = 0; i < q; i++) {
+    int a, b;
+    cin >> a >> b;
+    cout << find_lca(a, b) << endl;
+  }
 }
