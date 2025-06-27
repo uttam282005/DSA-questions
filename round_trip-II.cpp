@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -181,7 +178,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,38 +185,69 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
+vector<int> G[N];
+bool visited[N];
+bool isPresentInStack[N];
 
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
+vector<int> path;
+stack<int> recurse;
 
-  if (res == l) {
-    edges.pb({l, r});
-    return;
+bool dfs(int node) {
+  visited[node] = true;
+  recurse.push(node);
+  isPresentInStack[node] = true;
+
+  for (int child : G[node]) {
+    if (visited[child]) {
+      if (isPresentInStack[child]) {
+        recurse.push(child);
+        return true;
+      }
+    } else {
+      if (dfs(child))
+        return true;
+    }
   }
 
-  query(l, res, edges);
+  recurse.pop();
+  isPresentInStack[node] = false;
+  return false;
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
-
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  int n, m;
+  cin >> n >> m;
+  rep(i, 0, m) {
+    int s, d;
+    cin >> s >> d;
+    G[s].pb(d);
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  for (int i = 1; i <= n; i++) {
+    if (!visited[i]) {
+      if (dfs(i))
+        break;
+    }
   }
-  cout << endl;
+
+  if (recurse.empty()) {
+    cout << "IMPOSSIBLE\n";
+    return;
+  }
+
+  int start = recurse.top();
+  while (!recurse.empty()) {
+    path.pb(recurse.top());
+    recurse.pop();
+    if (path.back() == start and path.size() != 1)
+      break;
+  }
+
+  reverse(all(path));
+
+  cout << path.size() << endl;
+
+  for (int node : path) {
+    cout << node << " ";
+  }
 }

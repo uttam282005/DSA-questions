@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -189,38 +186,30 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
+void addToAns(map<int, int> &mp, ll &ans) {
+  for (auto [ele, cnt] : mp) {
+    ans += 1ll * cnt * (cnt - 1);
   }
-
-  query(l, res, edges);
 }
 
 void solve() {
   int n;
   cin >> n;
-  vector<pair<int, int>> edges;
-
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  map<int, int> up, down, diag1, diag2;
+  for (int i = 0; i < n; i++) {
+    int x, y;
+    cin >> x >> y;
+    up[x]++;
+    down[y]++;
+    diag1[x - y]++;
+    diag2[x + y]++;
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
-  }
-  cout << endl;
+  ll ans = 0;
+  addToAns(up, ans);
+  addToAns(down, ans);
+  addToAns(diag1, ans);
+  addToAns(diag2, ans);
+
+  cout << ans << endl;
 }

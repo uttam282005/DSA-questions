@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
@@ -189,38 +187,31 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
-
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  int n, m;
+  cin >> n >> m;
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  vector<int> vec(n);
+  map<int, int> s, o;
+
+  for (int i = 0; i < n; i++)
+    cin >> vec[i];
+
+  for (int i = 1; i <= m; i++) {
+    int p, v;
+    cin >> p >> v;
+    p--;
+    o[vec[p]] += i - s[vec[p]];
+    s[vec[p]] = -1;
+    vec[p] = v;
+    s[v] = i;
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  ll ans = 0;
+  for (auto [u, c] : o) {
+    ans += c * (c - 1) / 2;
+    ans += c * (m + 1 - c);
   }
-  cout << endl;
+
+  cout << ans << endl;
 }

@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
+#include <pthread.h>
 #include <vector>
 using namespace std;
 
@@ -189,38 +188,30 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
-
 void solve() {
   int n;
   cin >> n;
-  vector<pair<int, int>> edges;
+  ll suffix = 0;
+  vector<pair<ll, ll>> v(n + 1);
+  for (int i = 0; i < n; i++) {
+    cin >> v[i + 1].first;
+    v[i + 1].second = i + 1;
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+    suffix += v[i + 1].first;
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  sort(all(v));
+
+  vector<ll> ans(n + 1);
+  ll prefix = 0;
+  for (int i = 1; i <= n; i++) {
+    prefix += v[i].first;
+    suffix -= v[i].first;
+
+    ans[v[i].second] = n - prefix + suffix + v[i].first * (2 * i - n);
   }
+
+  for (int i = 1; i <= n; i++)
+    cout << ans[i] << " ";
   cout << endl;
 }

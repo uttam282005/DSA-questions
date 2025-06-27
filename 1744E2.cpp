@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
@@ -189,38 +187,44 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
+vector<int> find_divisors(int a) {
+  vector<int> div;
+  for (int i = 1; i * i <= a; i++) {
+    if (a % i == 0)
+      div.pb(i), div.pb(a / i);
   }
-
-  query(l, res, edges);
+  return div;
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  int a, b, c, d;
+  cin >> a >> b >> c >> d;
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  vector<int> div_a = find_divisors(a);
+  vector<int> div_b = find_divisors(b);
+
+  for (int a1 : div_a) {
+    for (int b1 : div_b) {
+      ll s = a1 * b1;
+
+      int lower = a / s;
+      int upper = c / s;
+
+      if (upper - lower <= 0)
+        continue;
+
+      ll x = (lower + 1) * s;
+
+      s = 1LL * a * b / gcd(1LL * a * b, x);
+      lower = b / s;
+      upper = d / s;
+      if (upper - lower <= 0)
+        continue;
+
+      cout << x << " " << s * (lower + 1) << endl;
+      return;
+    }
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
-  }
-  cout << endl;
+  cout << -1 << " " << -1 << endl;
 }

@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
+#include <climits>
 using namespace std;
 
 // Defines
@@ -189,38 +187,47 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
-
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  int n, m, d;
+  cin >> n >> m >> d;
+  vi v(m + 1);
+  v[0] = 1;
+  for (int i = 0; i < m; i++)
+    cin >> v[i + 1];
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  vi prefix(m + 1);
+  vi suffix(m + 1);
+
+  prefix[0] = 1;
+
+  for (int i = 1; i <= m; i++) {
+    prefix[i] += prefix[i - 1] + 1;
+
+    int l = v[i - 1] + 1;
+    int r = v[i] - 1;
+
+    if (l >= r)
+      continue;
+
+    prefix[i] += (r - l + 1) / d;
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  suffix[m] = 1;
+
+  for (int i = m - 1; i >= 0; i--) {
+    suffix[i] += suffix[i + 1] + 1;
+
+    int l = v[i] + 1;
+    int r = v[i + 1] - 1;
+
+    if (l >= r)
+      continue;
+
+    suffix[i] += (r - l + 1) / d;
   }
-  cout << endl;
+
+  int ans = INT_MAX;
+
+  for (int i = 0; i < m; i++) {
+  }
 }

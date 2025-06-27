@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
@@ -181,7 +179,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,38 +186,77 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
+vector<int> G[N];
+bool isDone[N];
+bool isVisited[N];
+vector<int> order;
+bool inPath[N];
+stack<int> recursionStack;
 
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
+bool hasCycle(int course) {
+  isVisited[course] = true;
+  recursionStack.push(course);
+  inPath[course] = true;
 
-  if (res == l) {
-    edges.pb({l, r});
-    return;
+  for (int prereq : G[course]) {
+    if (isVisited[prereq]) {
+      if (inPath[prereq])
+        return true;
+    } else {
+      if (hasCycle(prereq)) {
+        return true;
+      }
+    }
   }
 
-  query(l, res, edges);
+  recursionStack.pop();
+  inPath[course] = false;
+  return false;
+}
+
+bool dfs(int course) {
+  if (isDone[course])
+    return true;
+
+  if (isVisited[course])
+    return false;
+
+  for (int prereq : G[course]) {
+    if (!dfs(prereq))
+      return false;
+  }
+
+  isDone[course] = true;
+  order.pb(course);
+
+  return true;
 }
 
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
-
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  int n, m;
+  cin >> n >> m;
+  for (int i = 0; i < m; i++) {
+    int a, b;
+    cin >> a >> b;
+    G[b].pb(a);
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  for (int i = 1; i <= n; i++) {
+    if (!isVisited[i]) {
+      if (hasCycle(i)) {
+        cout << "IMPOSSIBLE\n";
+        return;
+      }
+    }
   }
-  cout << endl;
+  for (int i = 1; i <= n; i++)
+    isVisited[i] = false;
+  for (int i = 1; i <= n; i++) {
+    if (!isDone[i]) {
+      dfs(i);
+    }
+  }
+
+  for (int course : order)
+    cout << course << " ";
 }

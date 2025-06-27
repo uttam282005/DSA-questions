@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
@@ -33,6 +31,7 @@ const int N = 2e5 + 1;
 
 // Factorials and Modular Arithmetic
 int fact[N + 1];
+
 int inv_fact[N + 1];
 
 // Binary Exponentiation
@@ -181,7 +180,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,38 +187,64 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
-
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  int n, m;
+  cin >> n >> m;
+  vector<tuple<int, int, ll>> edges;
+  vector<ll> dis(n + 1, INF);
+  vector<int> par(n + 1, -1);
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  dis[0] = 0;
+
+  for (int i = 0; i < m; i++) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    edges.pb({a, b, c});
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  for (int i = 1; i <= n; i++) {
+    edges.pb({0, i, 0});
   }
-  cout << endl;
+
+  int x = -1;
+
+  for (int i = 0; i < n; i++) {
+    x = -1;
+    for (auto [u, v, w] : edges) {
+      if (dis[u] != INF && dis[v] > dis[u] + w) {
+        dis[v] = dis[u] + w;
+        par[v] = u;
+        x = v;
+      }
+    }
+  }
+
+  if (x == -1) {
+    cout << "NO\n";
+    return;
+  } else {
+    // To ensure we are in the cycle
+    for (int i = 0; i < n; i++) {
+      if (par[x] == 0)
+        break;
+      x = par[x];
+    }
+
+    vector<int> cycle;
+    int cur = x;
+
+    do {
+      cycle.push_back(cur);
+      cur = par[cur];
+    } while (cur != x and cur != 0);
+
+    cycle.push_back(x);
+    reverse(cycle.begin(), cycle.end());
+
+    cout << "YES\n";
+    for (int v : cycle) {
+      cout << v << " ";
+    }
+    cout << "\n";
+  }
 }

@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
+#include <functional>
+#include <queue>
 #include <vector>
 using namespace std;
 
@@ -181,46 +181,26 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
 
   return 0;
 }
-
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
+class cmp {
+public:
+  bool operator()(int a, int b) { return a >= b; }
+};
 
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  priority_queue<int> max_heap;
+  priority_queue<int, vector<int>, cmp> min_heap;
+  min_heap.push(3);
+  min_heap.push(8);
+  min_heap.push(1);
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  while (!min_heap.empty()) {
+    cout << min_heap.top() << endl;
+    min_heap.pop();
   }
-
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
-  }
-  cout << endl;
 }

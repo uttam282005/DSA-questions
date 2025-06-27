@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
+#include <queue>
 using namespace std;
 
 // Defines
@@ -181,7 +179,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,38 +186,43 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
+int inDegree[N];
+vector<int> G[N];
 
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
+void solve() {
+  int n, m;
+  cin >> n >> m;
+  for (int i = 0; i < m; i++) {
+    int a, b;
+    cin >> a >> b;
+    G[a].pb(b);
+    inDegree[b]++;
+  }
+  queue<int> srcs;
+  vector<int> ans;
+  for (int i = 1; i <= n; i++) {
+    if (inDegree[i] == 0)
+      srcs.push(i);
+  }
 
-  if (res == l) {
-    edges.pb({l, r});
+  while (!srcs.empty()) {
+    int top = srcs.front();
+    srcs.pop();
+
+    ans.pb(top);
+
+    for (int course : G[top]) {
+      inDegree[course]--;
+      if (inDegree[course] == 0)
+        srcs.push(course);
+    }
+  }
+
+  if (ans.size() != n) {
+    cout << "IMPOSSIBLE\n";
     return;
   }
 
-  query(l, res, edges);
-}
-
-void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
-
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
-  }
-
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
-  }
-  cout << endl;
+  for (int c : ans)
+    cout << c << " ";
 }

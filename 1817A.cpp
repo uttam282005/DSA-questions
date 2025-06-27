@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -181,7 +178,6 @@ int main() {
   cin.tie(0);
 
   int t = 1;
-  cin >> t;
   while (t--) {
     solve();
   }
@@ -189,38 +185,27 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
-
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
-
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  int n, q;
+  cin >> n >> q;
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  vi v(n);
+  vi p(n - 1);
+  for (int i = 0; i < n; i++)
+    cin >> v[i];
+
+  for (int i = 1; i < n - 1; i++) {
+    int downfall = v[i] <= v[i - 1] and v[i] >= v[i + 1];
+    p[i] = p[i - 1] + downfall;
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  while (q--) {
+    int l, r;
+    cin >> l >> r;
+    --l, --r;
+    if (l == r)
+      cout << "1\n";
+    else
+      cout << (r - l + 1) - p[r - 1] + p[l] << endl;
   }
-  cout << endl;
 }

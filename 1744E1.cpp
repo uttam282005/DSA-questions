@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -189,38 +186,18 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
+void solve() {
+  int a, b, c, d;
+  cin >> a >> b >> c >> d;
+  for (int x = a + 1; x <= c; x++) {
+    ll s = 1LL * a * b / gcd(1LL * a * b, x);
+    int lower = b / s;
+    int upper = d / s;
+    if (upper - lower <= 0)
+      continue;
 
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
+    cout << x << " " << s * (lower + 1) << endl;
     return;
   }
-
-  query(l, res, edges);
-}
-
-void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
-
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
-  }
-
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
-  }
-  cout << endl;
+  cout << -1 << " " << -1 << endl;
 }

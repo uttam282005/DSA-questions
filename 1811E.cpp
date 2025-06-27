@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#include <cstdlib>
-#include <unordered_map>
-#include <vector>
 using namespace std;
 
 // Defines
@@ -40,9 +37,9 @@ ll binPow(ll a, ll b) {
   if (b == 0)
     return 1;
   ll res = binPow(a, b / 2);
-  res = (res * res) % MOD;
+  res = (res * res);
   if (b % 2 == 1)
-    res = (res * (a % MOD)) % MOD;
+    res = (res * (a));
   return res;
 }
 
@@ -189,38 +186,96 @@ int main() {
   return 0;
 }
 
-int ask(int a, int b) {
-  int res;
-  cout << "? " << a << " " << b << endl;
-  cin >> res;
-  return res;
-}
+// vector<ll> start(14); // 1 - 10^i  - 1
 
-void query(int l, int r, vector<pair<int, int>> &edges) {
-  int res = ask(l, r);
-  if (res == -1)
-    exit(0);
-
-  if (res == l) {
-    edges.pb({l, r});
-    return;
-  }
-
-  query(l, res, edges);
-}
+// ll h(ll k, bool &doesContainFour) {
+//   int cpk = k;
+//   int powerOfTen = 0;
+//   int ind = 0;
+//   int i = 0;
+//   ll total = 0;
+//
+//   while (k) {
+//     ll coff = k % 10;
+//     if (coff == 4) {
+//       doesContainFour = true, ind = i;
+//     } else if (coff >= 5)
+//       total += start[powerOfTen] * (coff - 1);
+//     else
+//       total += start[powerOfTen] * coff;
+//     k /= 10;
+//     powerOfTen++;
+//     i++;
+//   }
+//
+//   return total;
+// }
+//
 
 void solve() {
-  int n;
-  cin >> n;
-  vector<pair<int, int>> edges;
+  ll k;
+  cin >> k;
 
-  for (int i = 2; i <= n; i++) {
-    query(i, 1, edges);
+  int digitsReq = 1;
+  ll cur_total = 8;
+  ll total = cur_total;
+
+  while (total < k) {
+    digitsReq++;
+    cur_total *= 9;
+    total += cur_total;
   }
 
-  cout << "! ";
-  for (auto edge : edges) {
-    cout << edge.first << " " << edge.second << " ";
+  vector<int> ans(digitsReq + 1);
+
+  for (int j = 1; j <= digitsReq; j++) {
+    ll digitsFromRest = binPow(9, digitsReq - j);
+    int options = 0;
+    int digit = 0;
+    for (int i = 0; i <= 9; i++) {
+      if (i == 4)
+        continue;
+      if (i < 4)
+        options = i;
+      else
+        options = i - 1;
+      if (options * digitsFromRest > k)
+        break;
+      digit = i;
+    }
+
+    if (digit < 4)
+      options = digit;
+    else
+      options = digit - 1;
+
+    ans[j] = digit;
+
+    k -= digitsFromRest * options;
   }
+
+  for (int i = 1; i <= digitsReq; i++)
+    cout << ans[i];
+
   cout << endl;
+  // start[0] = 1;
+  // for (int i = 1; i < 14; i++) {
+  //   start[i] = start[i - 1] * 9;
+  // }
+  //
+  // ll left = 0;
+  // ll right = 1e13 + 1;
+  // ll mid;
+  // ll ans = 0;
+  // while (left <= right) {
+  //   mid = (right - left) / 2 + left;
+  //   bool doesContainFour = false;
+  //   ll total = h(mid, &doesContainFour);
+  //   if (total < k)
+  //     left = mid + 1;
+  //   else {
+  //     ans = mid;
+  //     right = mid - 1;
+  //   }
+  // }
 }
