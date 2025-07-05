@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <queue>
+#include <functional>
 using namespace std;
 
 // Defines
@@ -35,46 +35,38 @@ int inv_fact[N + 1];
 
 // Binary Exponentiation
 ll binPow(ll a, ll b) {
-  if (b == 0)
-    return 1;
+  if (b == 0) return 1;
   ll res = binPow(a, b / 2);
   res = (res * res) % MOD;
-  if (b % 2 == 1)
-    res = (res * (a % MOD)) % MOD;
+  if (b % 2 == 1) res = (res * (a % MOD)) % MOD;
   return res;
 }
 
 // Precomputing factorials and inverse factorials
 void calculate_factorial_bulk() {
   fact[0] = 1;
-  for (int i = 1; i <= N; i++)
-    fact[i] = 1ll * fact[i - 1] * i % MOD;
+  for (int i = 1; i <= N; i++) fact[i] = 1ll * fact[i - 1] * i % MOD;
   inv_fact[N] = binPow(fact[N], MOD - 2) % MOD;
-  for (int i = N - 1; i >= 0; i--)
-    inv_fact[i] = 1ll * inv_fact[i + 1] * (i + 1) % MOD;
+  for (int i = N - 1; i >= 0; i--) inv_fact[i] = 1ll * inv_fact[i + 1] * (i + 1) % MOD;
 }
 
 // Calculate factorial for small numbers
 ll factorialSmall(int n) {
-  if (n == 0 || n == 1)
-    return 1;
+  if (n == 0 || n == 1) return 1;
   ll res = 1;
-  for (int i = 2; i <= n; i++)
-    res *= i;
+  for (int i = 2; i <= n; i++) res *= i;
   return res;
 }
 
 // nCr calculation with modular arithmetic
 ll nCr(int n, int r) {
-  if (r < 0 || r > n)
-    return 0;
+  if (r < 0 || r > n) return 0;
   return 1ll * fact[n] * inv_fact[r] % MOD * inv_fact[n - r] % MOD;
 }
 
 // Combination without modular arithmetic
 ll c(int n, int r) {
-  if (r < 0 || r > n)
-    return 0;
+  if (r < 0 || r > n) return 0;
   ll res = 1;
   for (int i = 1; i <= r; i++) {
     res *= n - i + 1;
@@ -85,10 +77,8 @@ ll c(int n, int r) {
 
 // Derangement Calculation
 ll derangements(int n) {
-  if (n == 0)
-    return 1;
-  if (n == 1)
-    return 0;
+  if (n == 0) return 1;
+  if (n == 1) return 0;
   ll D = 0, sign = 1;
   for (int k = 0; k <= n; k++) {
     ll term = (sign * inv_fact[k]) % MOD;
@@ -112,18 +102,15 @@ void _f(const char *names, Arg1 &&arg1, Args &&...args) {
 }
 
 ll gcd(ll a, ll b) {
-  if (b > a)
-    return gcd(b, a);
-  if (b == 0)
-    return a;
+  if (b > a) return gcd(b, a);
+  if (b == 0) return a;
   return gcd(b, a % b);
 }
 
 ll expo(ll a, ll b, ll mod) {
   ll res = 1;
   while (b > 0) {
-    if (b & 1)
-      res = (res * a) % mod;
+    if (b & 1) res = (res * a) % mod;
     a = (a * a) % mod;
     b >>= 1;
   }
@@ -131,12 +118,7 @@ ll expo(ll a, ll b, ll mod) {
 }
 
 void extendgcd(ll a, ll b, ll *v) {
-  if (b == 0) {
-    v[0] = 1;
-    v[1] = 0;
-    v[2] = a;
-    return;
-  }
+  if (b == 0) { v[0] = 1; v[1] = 0; v[2] = a; return; }
   extendgcd(b, a % b, v);
   ll x = v[1];
   v[1] = v[0] - v[1] * (a / b);
@@ -144,8 +126,7 @@ void extendgcd(ll a, ll b, ll *v) {
 }
 
 ll mminv(ll a, ll b) {
-  ll arr[3];
-  extendgcd(a, b, arr);
+  ll arr[3]; extendgcd(a, b, arr);
   return arr[0];
 }
 
@@ -179,6 +160,7 @@ int main() {
   cin.tie(0);
 
   int t = 1;
+  cin >> t;
   while (t--) {
     solve();
   }
@@ -186,44 +168,32 @@ int main() {
   return 0;
 }
 
-int inDegree[N];
-vector<int> G[N];
-
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  for (int i = 0; i < m; i++) {
-    int a, b;
-    cin >> a >> b;
-    G[a].pb(b);
-    inDegree[b]++;
-  }
-
-  queue<int> srcs;
-  vector<int> ans;
-  for (int i = 1; i <= n; i++) {
-    if (inDegree[i] == 0)
-      srcs.push(i);
-  }
-
-  while (!srcs.empty()) {
-    int top = srcs.front();
-    srcs.pop();
-
-    ans.pb(top);
-
-    for (int course : G[top]) {
-      inDegree[course]--;
-      if (inDegree[course] == 0)
-        srcs.push(course);
-    }
-  }
-
-  if (ans.size() != n) {
-    cout << "IMPOSSIBLE\n";
+  int n, m, k; cin >> n >> m >> k; 
+  vi v(m);
+  rep(i, 0, m) cin >> v[i];
+  if (m < k) {
+    cout << "NO\n";
     return;
   }
 
-  for (int c : ans)
-    cout << c << " ";
+
+  int rem = n % k;
+  int grp = n / k;
+  int cnt_r_o   = 0;
+  for(int i = 0; i < m; i++) {
+    cnt_r_o += (v[i] == grp + 1);
+    if (v[i] > grp + 1) {
+      cout << "NO\n";
+      return;
+    }
+  }
+  if (cnt_r_o > rem ) {
+    cout << "NO\n";
+    return;
+  } 
+
+  cout << "YES\n";
+
 }
+

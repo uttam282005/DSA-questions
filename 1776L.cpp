@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <queue>
 using namespace std;
 
 // Defines
@@ -186,44 +185,47 @@ int main() {
   return 0;
 }
 
-int inDegree[N];
-vector<int> G[N];
 
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  for (int i = 0; i < m; i++) {
+  int n;
+  cin >> n;
+  string s;
+  cin >> s;
+  int q;
+  cin >> q;
+
+  int count_p = 0, count_n = 0;
+  for (int i = 0; i < n; i++) {
+    count_p += (s[i] == '+');
+    count_n += (s[i] == '-');
+  }
+
+  int tot = count_p - count_n;
+
+  while (q--) {
     int a, b;
     cin >> a >> b;
-    G[a].pb(b);
-    inDegree[b]++;
-  }
 
-  queue<int> srcs;
-  vector<int> ans;
-  for (int i = 1; i <= n; i++) {
-    if (inDegree[i] == 0)
-      srcs.push(i);
-  }
+    int diff = b - a;
+    if (diff == 0 and tot != 0) {
+      cout << "NO\n";
+      continue;
+    } else if (tot == 0 and diff == 0){
+      cout << "YES\n";
+      continue;
+    }
+    
+    if ((1LL*tot * b) % diff != 0) {
+      cout << "NO\n";
+      continue;
+    }
+    ll val = 1LL * tot * b / diff;
 
-  while (!srcs.empty()) {
-    int top = srcs.front();
-    srcs.pop();
-
-    ans.pb(top);
-
-    for (int course : G[top]) {
-      inDegree[course]--;
-      if (inDegree[course] == 0)
-        srcs.push(course);
+    if (val >= -count_n && val <= count_p) {
+      cout << "YES\n";
+    } else {
+      cout << "NO\n";
     }
   }
-
-  if (ans.size() != n) {
-    cout << "IMPOSSIBLE\n";
-    return;
-  }
-
-  for (int c : ans)
-    cout << c << " ";
 }
+

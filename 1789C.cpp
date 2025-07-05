@@ -207,10 +207,14 @@ void solve() {
     s[v] = i;
   }
 
+  for(int i = 0; i < n; i++) {
+    o[vec[i]] += m + 1 - s[vec[i]];
+  }
+
   ll ans = 0;
   for (auto [u, c] : o) {
-    ans += c * (c - 1) / 2;
-    ans += c * (m + 1 - c);
+    ans += 1LL*c * (c - 1) / 2;
+    ans += 1LL*c * (m + 1 - c);
   }
 
   cout << ans << endl;
